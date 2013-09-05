@@ -1,3 +1,6 @@
+let s:save_cpo = &cpo
+set cpo&vim
+
 " This script expects the following variables in ~/.hateblo.vim
 " - b:hateblo_user          User ID
 " - b:hateblo_wsse_pass     WSSE Pass
@@ -44,3 +47,6 @@ function! s:listHateblo()
 
   Unite hateblo-list
 endfunction
+
+let &cpo = s:save_cpo
+unlet s:save_cpo

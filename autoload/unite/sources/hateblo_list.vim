@@ -7,6 +7,11 @@ let s:unite_hateblo_list_source = {
 \}
 
 function! s:unite_hateblo_list_source.gather_candidates(args, context)
+  let l:feed = webapi#atom#getFeed(
+        \ b:hateblo_api_endpoint . '/entry',
+        \ b:hateblo_user,
+        \ b:hateblo_wsse_pass
+        \)
   let l:entries = b:hateblo_entries
 
   let l:entry_list = []
