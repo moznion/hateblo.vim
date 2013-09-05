@@ -2,16 +2,20 @@ let s:save_cpo = &cpo
 set cpo&vim
 
 let s:unite_hateblo_list_source = {
-      \'name': 'hateblo-list',
-      \'description': 'Entry list of HatenaBlog'
-\}
+      \ 'name': 'hateblo-list',
+      \ 'description': 'Entry list of HatenaBlog',
+      \ 'action_table': {
+      \   'edit_entry': {
+      \     'description': 'edit entry'
+      \   }
+      \ },
+      \ 'default_action': 'edit_entry'
+\ }
+
+function! s:unite_hateblo_list_source.action_table.edit_entry.func(candidate)
+endfunction
 
 function! s:unite_hateblo_list_source.gather_candidates(args, context)
-  let l:feed = webapi#atom#getFeed(
-        \ b:hateblo_api_endpoint . '/entry',
-        \ b:hateblo_user,
-        \ b:hateblo_wsse_pass
-        \)
   let l:entries = b:hateblo_entries
 
   let l:entry_list = []
