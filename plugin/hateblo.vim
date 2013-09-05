@@ -3,7 +3,7 @@ set cpo&vim
 
 " This script expects the following variables in ~/.hateblo.vim
 " - b:hateblo_user          User ID
-" - b:hateblo_wsse_pass     WSSE Pass
+" - b:hateblo_api_key       API Key
 " - b:hateblo_api_endpoint  Endpoint of API
 source $HOME/.hateblo.vim
 
@@ -35,7 +35,7 @@ function! s:createHateblo()
   call webapi#atom#createEntry(
         \ s:entry_api,
         \ b:hateblo_user,
-        \ b:hateblo_wsse_pass,
+        \ b:hateblo_api_key,
         \ {
         \   'title':        l:title,
         \   'content':      l:content,
@@ -51,7 +51,7 @@ function! s:listHateblo()
   let l:feed = webapi#atom#getFeed(
         \ s:entry_api,
         \ b:hateblo_user,
-        \ b:hateblo_wsse_pass
+        \ b:hateblo_api_key
         \)
   let b:hateblo_entries = l:feed['entry']
 
