@@ -18,6 +18,13 @@ Getting started
 
 Sample of `.hateblo.vim` is included in this repository.
 
+3. Install dependent plugins. If you are using NeoBundle, please write down like the following into .vimrc;
+
+        NeoBundle 'mattn/webapi-vim'
+        NeoBundle 'Shougo/unite.vim'
+
+after execute `NeoBundleInstall`.
+
 Provided commands
 -----------------
 
@@ -28,6 +35,12 @@ Provided commands
 - :ListHateblo
 
     Show entries list in your blog.
+
+Dependencies
+------------
+
+- webapi-vim
+- unite.vim
 
 License
 -------
