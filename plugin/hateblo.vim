@@ -15,8 +15,9 @@ command! -nargs=* CreateHateblo call s:createHateblo()
 command! -nargs=* ListHateblo   call s:listHateblo()
 
 function! s:createHateblo()
+  let l:lines = getline('1', '$')
   let l:content = ''
-  for l:line in readfile(expand("%:p"))
+  for l:line in l:lines
     let l:content = l:content . l:line . "\n"
   endfor
 
