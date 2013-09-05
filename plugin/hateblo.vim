@@ -9,6 +9,7 @@ let s:unite_hateblo_entry_list_source = {'name': 'hateblo_entry_list'}
 let s:entry_api = b:hateblo_api_endpoint . '/entry'
 
 command! -nargs=* CreateHateblo call s:createHateblo()
+command! -nargs=* ListHateblo   call s:listHateblo()
 
 function! s:createHateblo()
   let l:content = ''
@@ -29,5 +30,17 @@ function! s:createHateblo()
         \   'content.mode': ''
         \ }
         \)
+  redraw
   echo "Success!"
+endfunction
+
+function! s:listHateblo()
+  let l:feed = webapi#atom#getFeed(
+        \ s:entry_api,
+        \ b:hateblo_user,
+        \ b:hateblo_wsse_pass
+        \)
+  let b:hateblo_entries = l:feed['entry']
+
+  Unite hateblo-list
 endfunction
