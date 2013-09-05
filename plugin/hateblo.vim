@@ -16,12 +16,21 @@ command! -nargs=* ListHateblo   call s:listHateblo()
 
 function! s:createHateblo()
   let l:lines = getline('1', '$')
+
+  let l:title = ''
+  if l:lines[0][0] == '*'
+    let l:title = l:lines[0][1:]
+    call remove(l:lines, 0)
+  endif
+
   let l:content = ''
   for l:line in l:lines
     let l:content = l:content . l:line . "\n"
   endfor
 
-  let l:title = input("Enter the title: ")
+  if l:title == ''
+    let l:title = input("Enter the title: ")
+  endif
 
   call webapi#atom#createEntry(
         \ s:entry_api,
@@ -35,7 +44,7 @@ function! s:createHateblo()
         \ }
         \)
   redraw
-  echo "Success!"
+  echo "Done!"
 endfunction
 
 function! s:listHateblo()
