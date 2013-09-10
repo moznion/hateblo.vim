@@ -23,10 +23,7 @@ function! s:createHateblo()
     call remove(l:lines, 0)
   endif
 
-  let l:content = ''
-  for l:line in l:lines
-    let l:content = l:content . l:line . "\n"
-  endfor
+  let l:content = join(l:lines, "\n")
 
   if l:title == ''
     let l:title = input("Enter the title: ")
