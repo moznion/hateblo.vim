@@ -2,15 +2,15 @@ let s:save_cpo = &cpo
 set cpo&vim
 
 " This script expects the following variables in ~/.hateblo.vim
-" - b:hateblo_user          User ID
-" - b:hateblo_api_key       API Key
-" - b:hateblo_api_endpoint  Endpoint of API
-" - b:hateblo_WYSIWYG_mode  ( 0 | 1 )
+" - g:hateblo_user          User ID
+" - g:hateblo_api_key       API Key
+" - g:hateblo_api_endpoint  Endpoint of API
+" - g:hateblo_WYSIWYG_mode  ( 0 | 1 )
 source $HOME/.hateblo.vim
 
 let s:unite_hateblo_entry_list_source = {'name': 'hateblo_entry_list'}
 
-let s:entry_api = b:hateblo_api_endpoint . '/entry'
+let s:entry_api = g:hateblo_api_endpoint . '/entry'
 
 command! -nargs=* CreateHateblo call s:createHateblo()
 command! -nargs=* ListHateblo   call s:listHateblo()
@@ -28,7 +28,7 @@ function! s:createHateblo()
 
   let l:content = join(l:lines, "\n")
 
-  if b:hateblo_WYSIWYG_mode == 1
+  if g:hateblo_WYSIWYG_mode == 1
     let l:content = substitute(l:content, '\n', '<br />', 'g')
   endif
 
@@ -38,8 +38,8 @@ function! s:createHateblo()
 
   call webapi#atom#createEntry(
         \ s:entry_api,
-        \ b:hateblo_user,
-        \ b:hateblo_api_key,
+        \ g:hateblo_user,
+        \ g:hateblo_api_key,
         \ {
         \   'title':        l:title,
         \   'content':      l:content,
@@ -63,14 +63,14 @@ function! s:updateEntry()
 
   let l:content = join(l:lines, "\n")
 
-  if b:hateblo_WYSIWYG_mode == 1
+  if g:hateblo_WYSIWYG_mode == 1
     let l:content = substitute(l:content, '\n', '<br />', 'g')
   endif
 
   call webapi#atom#updateEntry(
         \ b:hateblo_entry_url,
-        \ b:hateblo_user,
-        \ b:hateblo_api_key,
+        \ g:hateblo_user,
+        \ g:hateblo_api_key,
         \ {
         \   'title':        b:hateblo_entry_title,
         \   'content':      l:content,
@@ -87,8 +87,8 @@ endfunction
 function! s:listHateblo()
   let l:feed = webapi#atom#getFeed(
         \ s:entry_api,
-        \ b:hateblo_user,
-        \ b:hateblo_api_key
+        \ g:hateblo_user,
+        \ g:hateblo_api_key
         \)
   let b:hateblo_entries = l:feed['entry']
 
@@ -98,8 +98,8 @@ endfunction
 function! b:detailEntry(entry_url)
   let l:entry = webapi#atom#getEntry(
         \ a:entry_url,
-        \ b:hateblo_user,
-        \ b:hateblo_api_key
+        \ g:hateblo_user,
+        \ g:hateblo_api_key
         \ )
   let l:entry_title = substitute(l:entry['title'], ' ', '\\ ', 'g')
   execute 'edit' l:entry_title

@@ -12,9 +12,9 @@ Getting started
 
 2. Write some configurations into `.hateblo.vim`, like so:
 
-        let b:hateblo_user         = 'user_name'
-        let b:hateblo_api_key      = 'api_key'
-        let b:hateblo_api_endpoint = 'api_endpoint_url'
+        let g:hateblo_user         = 'user_name'
+        let g:hateblo_api_key      = 'api_key'
+        let g:hateblo_api_endpoint = 'api_endpoint_url'
 
 Sample of `.hateblo.vim` is included in this repository.
 
