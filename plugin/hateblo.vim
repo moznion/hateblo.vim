@@ -148,6 +148,10 @@ function! b:detailEntry(entry_url)
   let l:escaped_entry_title = substitute(l:entry['title'], ' ', '\\ ', 'g')
   execute 'edit' l:escaped_entry_title
 
+  if g:hateblo_WYSIWYG_mode == 1
+    let l:lines = substitute(l:lines, '<br />', '\n', 'g')
+  endif
+
   let l:lines    = split(l:entry['content'], '\n')
   let l:line_num = 1
   for l:line in l:lines
