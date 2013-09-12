@@ -101,8 +101,8 @@ function! b:detailEntry(entry_url)
         \ g:hateblo_user,
         \ g:hateblo_api_key
         \ )
-  let l:entry_title = substitute(l:entry['title'], ' ', '\\ ', 'g')
-  execute 'edit' l:entry_title
+  let l:escaped_entry_title = substitute(l:entry['title'], ' ', '\\ ', 'g')
+  execute 'edit' l:escaped_entry_title
 
   let l:lines    = split(l:entry['content'], '\n')
   let l:line_num = 1
@@ -111,8 +111,8 @@ function! b:detailEntry(entry_url)
     let l:line_num = l:line_num + 1
   endfor
 
-  let l:editor_buf_num = bufnr(l:entry_title)
-  call setbufvar(l:editor_buf_num, 'hateblo_entry_title', l:entry_title)
+  let l:editor_buf_num = bufnr(l:escaped_entry_title)
+  call setbufvar(l:editor_buf_num, 'hateblo_entry_title', l:entry['title'])
   call setbufvar(l:editor_buf_num, 'hateblo_entry_url', a:entry_url)
 endfunction
 
