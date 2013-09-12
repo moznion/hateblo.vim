@@ -1,7 +1,7 @@
 hateblo.vim
 ===========
 
-はてなブログAtomPub APIを用いて、エントリの投稿等の機能を提供するVimプラグインです
+はてなブログAtomPub APIを用いて，エントリの投稿等の機能を提供するVimプラグインです
 
 Getting started
 ---------------
@@ -10,49 +10,47 @@ Getting started
 
         $ touch ~/.hateblo.vim
 
-2. `.hateblo.vim` に以下のように設定を記述します
+2. `.hateblo.vim` に以下のように設定を記述します (`.hateblo.vim` のサンプルは本リポジトリに含まれているので参考にして下さい)
 
         ```vim
         let g:hateblo_user         = 'user_name'        " はてなのユーザid
         let g:hateblo_api_key      = 'api_key'          " はてなブログの設定画面で確認できるAPIキー
         let g:hateblo_api_endpoint = 'api_endpoint_url' " はてなブログの設定画面で確認できるルートエンドポイント
-        let g:hateblo_WYSIWYG_mode = 0 | 1              " 見たままモードを利用している場合は1に。それ以外は0に。
+        let g:hateblo_WYSIWYG_mode = 0 | 1              " 見たままモードを利用している場合は1に．それ以外は0に．
         ```
 
-`.hateblo.vim` のサンプルは本リポジトリに含まれているので参考にして下さい。
-
-3. 本モジュールの依存モジュールをインストールして下さい. もしもNeoBundleを利用しているなら, .vimrcに以下の記述を追加するとよいでしょう。
+3. 本モジュールの依存モジュールをインストールして下さい. もしもNeoBundleを利用しているなら, .vimrcに以下の記述を追加するとよいでしょう．
 
         NeoBundle 'mattn/webapi-vim'
         NeoBundle 'Shougo/unite.vim'
 
-そのあとで`NeoBundleInstall`コマンドを実行して下さい.
+そのあとで`NeoBundleInstall`コマンドを実行して下さい．
 
 Provided commands
 -----------------
 
 - :CreateHateblo
 
-        新しいブログエントリを投稿します。
-        1行目に`\*#\*`から始まる文を記述すると、その行はタイトルとして扱われます。
-        もしも1行目でタイトルを指定しなかった場合は、インタラクティブにタイトルが要求されます。
+        新しいブログエントリを投稿します．
+        1行目に`\*#\*`から始まる文を記述すると，その行はタイトルとして扱われます．
+        もしも1行目でタイトルを指定しなかった場合は，インタラクティブにタイトルが要求されます．
 
 - :ListHateblo
 
-        ブログエントリのリストを unite source 形式で表示します。
-        エントリを選択すると、そのエントリを編集することができます。
-        後述する`UpdateHateblo`や`DeleteHateblo`といったコマンドは、`ListHateblo`で選択したエントリ上でしか実行することができません。
+        ブログエントリのリストを unite source 形式で表示します．
+        エントリを選択すると，そのエントリを編集することができます．
+        後述する`UpdateHateblo`や`DeleteHateblo`といったコマンドは，`ListHateblo`で選択したエントリ上でしか実行することができません．
 
 - :UpdateHateblo [new_entry_title]
 
-        ブログエントリを更新します。
-        引数の`new\_entry\_title`はオプショナルです。もしもタイトルを変更したい場合は指定してください。
-        引数が指定されなかった場合、タイトルは変更されません。
-        また、`CreateHateblo`とは異なり、1行目に`\*#\*`から始まる文を記述してもタイトルとしては扱われません。
+        ブログエントリを更新します．
+        引数の`new\_entry\_title`はオプショナルです．もしもタイトルを変更したい場合は指定してください．
+        引数が指定されなかった場合，タイトルは変更されません．
+        また，`CreateHateblo`とは異なり，1行目に`\*#\*`から始まる文を記述してもタイトルとしては扱われません．
 
 - :DeleteHateblo
 
-        ブログエントリを削除します。
+        ブログエントリを削除します．
 
 Dependencies
 ------------
