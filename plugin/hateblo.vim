@@ -18,7 +18,7 @@ let s:unite_hateblo_entry_list_source = {'name': 'hateblo_entry_list'}
 let s:entry_api = g:hateblo_api_endpoint . '/entry'
 
 command! -nargs=* CreateHateblo call s:createEntry()
-command! -nargs=* ListHateblo   call s:listEntry()
+command! -nargs=* ListHateblo   call b:listEntry()
 command! -nargs=* UpdateHateblo call s:updateEntry(<f-args>)
 command! -nargs=* DeleteHateblo call s:deleteEntry()
 
@@ -114,13 +114,27 @@ function! s:deleteEntry()
   echo "Done!"
 endfunction
 
-function! s:listEntry()
+function! b:listEntry(...)
+  let l:api_url = s:entry_api
+  if exists('a:000[0]')
+    let l:api_url = a:000[0]
+  endif
+
   let l:feed = webapi#atom#getFeed(
-        \ s:entry_api,
+        \ l:api_url,
         \ g:hateblo_user,
         \ g:hateblo_api_key
         \)
   let b:hateblo_entries = l:feed['entry']
+
+  let b:hateblo_next_page = ''
+  let l:links = l:feed['link']
+  for l:link in l:links
+    if l:link['rel'] == 'next'
+      let b:hateblo_next_page = l:link['href']
+      break
+    endif
+  endfor
 
   Unite hateblo-list
 endfunction

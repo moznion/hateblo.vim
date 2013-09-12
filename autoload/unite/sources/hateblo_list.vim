@@ -10,15 +10,18 @@ let s:unite_hateblo_list_source = {
       \ 'name': 'hateblo-list',
       \ 'description': 'Entry list of HatenaBlog',
       \ 'action_table': {
-      \   'edit_entry': {
-      \     'description': 'edit entry'
+      \   'on_choose': {
       \   }
       \ },
-      \ 'default_action': 'edit_entry'
+      \ 'default_action': 'on_choose'
 \ }
 
-function! s:unite_hateblo_list_source.action_table.edit_entry.func(candidate)
-  call b:detailEntry(a:candidate.action__url)
+function! s:unite_hateblo_list_source.action_table.on_choose.func(candidate)
+  if a:candidate.action__action == 'edit_entry'
+    call b:detailEntry(a:candidate.action__url)
+  elseif a:candidate.action__action == 'next_page'
+    call b:listEntry(a:candidate.action__url)
+  endif
 endfunction
 
 function! s:unite_hateblo_list_source.gather_candidates(args, context)
@@ -30,12 +33,23 @@ function! s:unite_hateblo_list_source.gather_candidates(args, context)
     let l:entry_updated_at = l:entry['updated']
     let l:entry_url = l:entry['link'][0]['href'] " XXX <= I think not good way...
     call add(l:entry_list, {
-      \   'word':        l:entry_title . ' (' . l:entry_updated_at . ')',
-      \   'source':      'hateblo-list',
-      \   'kind':        'file',
-      \   'action__url': l:entry_url
+      \   'word':           l:entry_title . ' (' . l:entry_updated_at . ')',
+      \   'source':         'hateblo-list',
+      \   'kind':           'file',
+      \   'action__action': 'edit_entry',
+      \   'action__url':    l:entry_url
       \})
   endfor
+
+  if b:hateblo_next_page != ''
+    call add(l:entry_list, {
+      \   'word':           '### NEXT PAGE ###',
+      \   'source':         'hateblo-list',
+      \   'kind':           'file',
+      \   'action__action': 'next_page',
+      \   'action__url':    b:hateblo_next_page
+      \ })
+  endif
 
   return l:entry_list
 endfunction
