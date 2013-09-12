@@ -12,12 +12,12 @@ Getting started
 
 2. `.hateblo.vim` に以下のように設定を記述します
 
-```vim
-let g:hateblo_user         = 'user_name'        " はてなのユーザid
-let g:hateblo_api_key      = 'api_key'          " はてなブログの設定画面で確認できるAPIキー
-let g:hateblo_api_endpoint = 'api_endpoint_url' " はてなブログの設定画面で確認できるルートエンドポイント
-let g:hateblo_WYSIWYG_mode = 0 | 1              " 見たままモードを利用している場合は1に。それ以外は0に。
-```
+        ```vim
+        let g:hateblo_user         = 'user_name'        " はてなのユーザid
+        let g:hateblo_api_key      = 'api_key'          " はてなブログの設定画面で確認できるAPIキー
+        let g:hateblo_api_endpoint = 'api_endpoint_url' " はてなブログの設定画面で確認できるルートエンドポイント
+        let g:hateblo_WYSIWYG_mode = 0 | 1              " 見たままモードを利用している場合は1に。それ以外は0に。
+        ```
 
 `.hateblo.vim` のサンプルは本リポジトリに含まれているので参考にして下さい。
 
