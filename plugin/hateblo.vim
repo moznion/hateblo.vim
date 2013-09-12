@@ -15,6 +15,7 @@ let s:entry_api = b:hateblo_api_endpoint . '/entry'
 command! -nargs=* CreateHateblo call s:createHateblo()
 command! -nargs=* ListHateblo   call s:listHateblo()
 
+" TODO rename
 function! s:createHateblo()
   let l:lines = getline('1', '$')
 
@@ -49,6 +50,7 @@ function! s:createHateblo()
   echo "Done!"
 endfunction
 
+" TODO rename
 function! s:listHateblo()
   let l:feed = webapi#atom#getFeed(
         \ s:entry_api,
@@ -58,6 +60,15 @@ function! s:listHateblo()
   let b:hateblo_entries = l:feed['entry']
 
   Unite hateblo-list
+endfunction
+
+function! b:detailEntry(entry_url)
+  let l:entry = webapi#atom#getEntry(
+        \ a:entry_url,
+        \ b:hateblo_user,
+        \ b:hateblo_api_key
+        \ )
+  echo l:entry
 endfunction
 
 let &cpo = s:save_cpo

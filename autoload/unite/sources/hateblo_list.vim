@@ -13,7 +13,7 @@ let s:unite_hateblo_list_source = {
 \ }
 
 function! s:unite_hateblo_list_source.action_table.edit_entry.func(candidate)
-  echo a:candidate.action__url
+  call b:detailEntry(a:candidate.action__url)
 endfunction
 
 function! s:unite_hateblo_list_source.gather_candidates(args, context)
