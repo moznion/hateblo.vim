@@ -12,13 +12,12 @@ let s:unite_hateblo_entry_list_source = {'name': 'hateblo_entry_list'}
 
 let s:entry_api = g:hateblo_api_endpoint . '/entry'
 
-command! -nargs=* CreateHateblo call s:createHateblo()
-command! -nargs=* ListHateblo   call s:listHateblo()
+command! -nargs=* CreateHateblo call s:createEntry()
+command! -nargs=* ListHateblo   call s:listEntry()
 command! -nargs=* UpdateHateblo call s:updateEntry(<f-args>)
 command! -nargs=* DeleteHateblo call s:deleteEntry()
 
-" TODO rename
-function! s:createHateblo()
+function! s:createEntry()
   let l:lines = getline('1', '$')
 
   let l:title = ''
@@ -110,8 +109,7 @@ function! s:deleteEntry()
   echo "Done!"
 endfunction
 
-" TODO rename
-function! s:listHateblo()
+function! s:listEntry()
   let l:feed = webapi#atom#getFeed(
         \ s:entry_api,
         \ g:hateblo_user,
