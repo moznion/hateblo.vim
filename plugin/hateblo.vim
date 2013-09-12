@@ -1,3 +1,8 @@
+" This plugin provides some functions of Hetena-Blog by using AtomPub API
+" File: hateblo.vim
+" Author: moznion (Taiki Kawakami) <moznion@gmail.com>
+" License: MIT License
+
 let s:save_cpo = &cpo
 set cpo&vim
 

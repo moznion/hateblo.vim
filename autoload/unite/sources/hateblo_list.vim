@@ -1,3 +1,8 @@
+" Unite source for hateblo.vim
+" File: hateblo_list.vim
+" Author: moznion (Taiki Kawakami) <moznion@gmail.com>
+" License: MIT License
+
 let s:save_cpo = &cpo
 set cpo&vim
 
