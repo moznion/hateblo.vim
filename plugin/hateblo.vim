@@ -5,6 +5,7 @@ set cpo&vim
 " - b:hateblo_user          User ID
 " - b:hateblo_api_key       API Key
 " - b:hateblo_api_endpoint  Endpoint of API
+" - b:hateblo_WYSIWYG_mode  ( 0 | 1 )
 source $HOME/.hateblo.vim
 
 let s:unite_hateblo_entry_list_source = {'name': 'hateblo_entry_list'}
@@ -24,6 +25,10 @@ function! s:createHateblo()
   endif
 
   let l:content = join(l:lines, "\n")
+
+  if b:hateblo_WYSIWYG_mode == 1
+    let l:content = substitute(l:content, '\n', '<br />', 'g')
+  endif
 
   if l:title == ''
     let l:title = input("Enter the title: ")
