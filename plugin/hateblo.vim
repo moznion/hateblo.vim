@@ -14,6 +14,7 @@ let s:entry_api = b:hateblo_api_endpoint . '/entry'
 
 command! -nargs=* CreateHateblo call s:createHateblo()
 command! -nargs=* ListHateblo   call s:listHateblo()
+command! -nargs=* UpdateHateblo call s:updateEntry()
 
 " TODO rename
 function! s:createHateblo()
@@ -46,6 +47,38 @@ function! s:createHateblo()
         \   'content.mode': ''
         \ }
         \)
+  redraw
+  echo "Done!"
+endfunction
+
+function! s:updateEntry()
+  if !exists('b:hateblo_entry_title') || !exists('b:hateblo_entry_url')
+    echohl WarningMsg
+    echo 'This entry does not exist on remote!'
+    echohl None
+    return
+  endif
+
+  let l:lines = getline('1', '$')
+
+  let l:content = join(l:lines, "\n")
+
+  if b:hateblo_WYSIWYG_mode == 1
+    let l:content = substitute(l:content, '\n', '<br />', 'g')
+  endif
+
+  call webapi#atom#updateEntry(
+        \ b:hateblo_entry_url,
+        \ b:hateblo_user,
+        \ b:hateblo_api_key,
+        \ {
+        \   'title':        b:hateblo_entry_title,
+        \   'content':      l:content,
+        \   'content.type': 'text/plain',
+        \   'content.mode': ''
+        \ }
+        \)
+
   redraw
   echo "Done!"
 endfunction
