@@ -77,6 +77,10 @@ function! b:detailEntry(entry_url)
     call setline(l:line_num, l:line)
     let l:line_num = l:line_num + 1
   endfor
+
+  let l:editor_buf_num = bufnr(l:entry_title)
+  call setbufvar(l:editor_buf_num, 'hateblo_entry_title', l:entry_title)
+  call setbufvar(l:editor_buf_num, 'hateblo_entry_url', a:entry_url)
 endfunction
 
 let &cpo = s:save_cpo
