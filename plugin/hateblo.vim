@@ -11,6 +11,7 @@ set cpo&vim
 " - g:hateblo_api_key       API Key
 " - g:hateblo_api_endpoint  Endpoint of API
 " - g:hateblo_WYSIWYG_mode  ( 0 | 1 )
+" - g:hateblo_always_yes    ( 0 | 1 )
 source $HOME/.hateblo.vim
 
 let s:unite_hateblo_entry_list_source = {'name': 'hateblo_entry_list'}
@@ -83,8 +84,8 @@ function! s:updateEntry(...)
     let l:title = a:000[0]
   endif
 
-  let l:will_post = input('Post? (y/n) [y]: ')
-  if l:will_post == '' || l:will_post == 'y'
+  let l:will_update = input('Update? (y/n) [y]: ')
+  if l:will_update == '' || l:will_update == 'y'
     call webapi#atom#updateEntry(
           \ b:hateblo_entry_url,
           \ g:hateblo_user,
@@ -112,8 +113,8 @@ function! s:deleteEntry()
     return
   endif
 
-  let l:will_post = input('Delete? (y/n) [y]: ')
-  if l:will_post == '' || l:will_post == 'y'
+  let l:will_delete = input('Delete? (y/n) [y]: ')
+  if l:will_delete == '' || l:will_delete == 'y'
     call webapi#atom#deleteEntry(
           \ b:hateblo_entry_url,
           \ g:hateblo_user,
