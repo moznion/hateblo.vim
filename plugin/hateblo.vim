@@ -18,10 +18,10 @@ let s:unite_hateblo_entry_list_source = {'name': 'hateblo_entry_list'}
 
 let s:entry_api = g:hateblo_api_endpoint . '/entry'
 
-command! -nargs=* CreateHateblo call s:createEntry()
-command! -nargs=* ListHateblo   call b:listEntry()
-command! -nargs=* UpdateHateblo call s:updateEntry(<f-args>)
-command! -nargs=* DeleteHateblo call s:deleteEntry()
+command! -nargs=* HatebloCreate call s:createEntry()
+command! -nargs=* HatebloList   call b:listEntry()
+command! -nargs=* HatebloUpdate call s:updateEntry(<f-args>)
+command! -nargs=* HatebloDelete call s:deleteEntry()
 
 function! s:createEntry()
   let l:lines = getline('1', '$')
