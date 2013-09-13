@@ -40,26 +40,26 @@ Getting started
 Provided commands
 -----------------
 
-- :CreateHateblo
+- :HatebloCreate
 
 新しいブログエントリを投稿します．
 1行目に`@#@`から始まる文を記述すると，その行はタイトルとして扱われます．
 もしも1行目でタイトルを指定しなかった場合は，インタラクティブにタイトルが要求されます．
 
-- :ListHateblo
+- :HatebloList
 
 ブログエントリのリストを unite source 形式で表示します．
 エントリを選択すると，そのエントリを編集することができます．
-後述する`UpdateHateblo`や`DeleteHateblo`といったコマンドは，`ListHateblo`で選択したエントリ上でしか実行することができません．
+後述する`HatebloUpdate`や`HatebloDelete`といったコマンドは，`HatebloList`で選択したエントリ上でしか実行することができません．
 
-- :UpdateHateblo [new_entry_title]
+- :HatebloUpdate [new_entry_title]
 
 ブログエントリを更新します．
 引数の`new_entry_title`はオプショナルです．もしもタイトルを変更したい場合は指定してください．
 引数が指定されなかった場合，タイトルは変更されません．
-また，`CreateHateblo`とは異なり，1行目に`@#@`から始まる文を記述してもタイトルとしては扱われません．
+また，`HatebloCreate`とは異なり，1行目に`@#@`から始まる文を記述してもタイトルとしては扱われません．
 
-- :DeleteHateblo
+- :HatebloDelete
 
 ブログエントリを削除します．
 

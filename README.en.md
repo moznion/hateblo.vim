@@ -29,11 +29,11 @@ after execute `NeoBundleInstall`.
 Provided commands
 -----------------
 
-- :CreateHateblo
+- :HatebloCreate
 
     Creates the new entry to your blog.
 
-- :ListHateblo
+- :HatebloList
 
     Show entries list in your blog.
 
