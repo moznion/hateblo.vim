@@ -17,7 +17,10 @@ Getting started
  let g:hateblo_api_key      = 'api_key'          " はてなブログの設定画面で確認できるAPIキー
  let g:hateblo_api_endpoint = 'api_endpoint_url' " はてなブログの設定画面で確認できるルートエンドポイント
  let g:hateblo_WYSIWYG_mode = 0 | 1              " 見たままモードを利用している場合は1に．それ以外は0に．
+ let g:hateblo_always_yes   = 0 | 1              " 確認プロンプトを出さずに常にyesにするときは1に．
  ```
+
+ なお，`g:hateblo_WYSIWYG_mode` と `g:hateblo_always_yes` はオプショナルなので，設定しなくても良いです (それ以外は必須)．オプショナル値が未設定の時は0が入っているとみなされます．
 
 3. 本モジュールの依存モジュールをインストールして下さい. もしもNeoBundleを利用しているなら, `.vimrc`に以下の記述を追加するとよいでしょう．
 
