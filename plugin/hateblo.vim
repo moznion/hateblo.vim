@@ -42,7 +42,12 @@ function! s:createEntry()
     let l:title = input("Enter the title: ")
   endif
 
-  let l:will_post = input('Post? (y/n) [y]: ')
+  if (exists('g:hateblo_always_yes') && g:hateblo_always_yes == 1)
+    let l:will_post = 'y'
+  else
+    let l:will_post = input('Post? (y/n) [y]: ')
+  endif
+
   if l:will_post == '' || l:will_post == 'y'
     call webapi#atom#createEntry(
           \ s:entry_api,
@@ -84,7 +89,12 @@ function! s:updateEntry(...)
     let l:title = a:000[0]
   endif
 
-  let l:will_update = input('Update? (y/n) [y]: ')
+  if (exists('g:hateblo_always_yes') && g:hateblo_always_yes == 1)
+    let l:will_update = 'y'
+  else
+    let l:will_update = input('Update? (y/n) [y]: ')
+  endif
+
   if l:will_update == '' || l:will_update == 'y'
     call webapi#atom#updateEntry(
           \ b:hateblo_entry_url,
@@ -113,7 +123,12 @@ function! s:deleteEntry()
     return
   endif
 
-  let l:will_delete = input('Delete? (y/n) [y]: ')
+  if (exists('g:hateblo_always_yes') && g:hateblo_always_yes == 1)
+    let l:will_delete = 'y'
+  else
+    let l:will_delete = input('Delete? (y/n) [y]: ')
+  endif
+
   if l:will_delete == '' || l:will_delete == 'y'
     call webapi#atom#deleteEntry(
           \ b:hateblo_entry_url,
