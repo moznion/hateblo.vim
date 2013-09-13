@@ -27,7 +27,7 @@ function! s:createEntry()
   let l:lines = getline('1', '$')
 
   let l:title = ''
-  if l:lines[0][0:2] == '*#*'
+  if l:lines[0][0:2] == '@#@'
     let l:title = l:lines[0][3:]
     call remove(l:lines, 0)
   endif
