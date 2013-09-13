@@ -7,16 +7,16 @@ let s:save_cpo = &cpo
 set cpo&vim
 
 " This script expects the following variables in ~/.hateblo.vim
-" - g:hateblo_user          User ID
-" - g:hateblo_api_key       API Key
-" - g:hateblo_api_endpoint  Endpoint of API
-" - g:hateblo_WYSIWYG_mode  ( 0 | 1 )
-" - g:hateblo_always_yes    ( 0 | 1 )
+" - g:hateblo_vim['user']           User ID
+" - g:hateblo_vim['api_key']        API Key
+" - g:hateblo_vim['api_endpoint']   Endpoint of API
+" - g:hateblo_vim['WYSIWYG_mode']   ( 0 | 1 )
+" - g:hateblo_vim['always_yes']     ( 0 | 1 )
 source $HOME/.hateblo.vim
 
 let s:unite_hateblo_entry_list_source = {'name': 'hateblo_entry_list'}
 
-let s:entry_api = g:hateblo_api_endpoint . '/entry'
+let s:entry_api = g:hateblo_vim['api_endpoint'] . '/entry'
 
 command! -nargs=* HatebloCreate call s:createEntry()
 command! -nargs=* HatebloList   call b:listEntry()
@@ -34,7 +34,7 @@ function! s:createEntry()
 
   let l:content = join(l:lines, "\n")
 
-  if exists('g:hateblo_WYSIWYG_mode') && g:hateblo_WYSIWYG_mode == 1
+  if exists("g:hateblo_vim['WYSIWYG_mode']") && g:hateblo_vim['WYSIWYG_mode'] == 1
     let l:content = substitute(l:content, '\n', '<br />', 'g')
   endif
 
@@ -42,7 +42,7 @@ function! s:createEntry()
     let l:title = input("Enter the title: ")
   endif
 
-  if (exists('g:hateblo_always_yes') && g:hateblo_always_yes == 1)
+  if (exists("g:hateblo_vim['always_yes']") && g:hateblo_vim['always_yes'] == 1)
     let l:will_post = 'y'
   else
     let l:will_post = input('Post? (y/n) [y]: ')
@@ -51,8 +51,8 @@ function! s:createEntry()
   if l:will_post == '' || l:will_post == 'y'
     call webapi#atom#createEntry(
           \ s:entry_api,
-          \ g:hateblo_user,
-          \ g:hateblo_api_key,
+          \ g:hateblo_vim['user'],
+          \ g:hateblo_vim['api_key'],
           \ {
           \   'title':        l:title,
           \   'content':      l:content,
@@ -80,7 +80,7 @@ function! s:updateEntry(...)
 
   let l:content = join(l:lines, "\n")
 
-  if exists('g:hateblo_WYSIWYG_mode') && g:hateblo_WYSIWYG_mode == 1
+  if exists("g:hateblo_vim['WYSIWYG_mode']") && g:hateblo_vim['WYSIWYG_mode'] == 1
     let l:content = substitute(l:content, '\n', '<br />', 'g')
   endif
 
@@ -89,7 +89,7 @@ function! s:updateEntry(...)
     let l:title = a:000[0]
   endif
 
-  if (exists('g:hateblo_always_yes') && g:hateblo_always_yes == 1)
+  if (exists("g:hateblo_vim['always_yes']") && g:hateblo_vim['always_yes'] == 1)
     let l:will_update = 'y'
   else
     let l:will_update = input('Update? (y/n) [y]: ')
@@ -98,8 +98,8 @@ function! s:updateEntry(...)
   if l:will_update == '' || l:will_update == 'y'
     call webapi#atom#updateEntry(
           \ b:hateblo_entry_url,
-          \ g:hateblo_user,
-          \ g:hateblo_api_key,
+          \ g:hateblo_vim['user'],
+          \ g:hateblo_vim['api_key'],
           \ {
           \   'title':        l:title,
           \   'content':      l:content,
@@ -123,7 +123,7 @@ function! s:deleteEntry()
     return
   endif
 
-  if (exists('g:hateblo_always_yes') && g:hateblo_always_yes == 1)
+  if (exists("g:hateblo_vim['always_yes']") && g:hateblo_vim['always_yes'] == 1)
     let l:will_delete = 'y'
   else
     let l:will_delete = input('Delete? (y/n) [y]: ')
@@ -132,8 +132,8 @@ function! s:deleteEntry()
   if l:will_delete == '' || l:will_delete == 'y'
     call webapi#atom#deleteEntry(
           \ b:hateblo_entry_url,
-          \ g:hateblo_user,
-          \ g:hateblo_api_key,
+          \ g:hateblo_vim['user'],
+          \ g:hateblo_vim['api_key'],
           \)
 
     unlet b:hateblo_entry_title
@@ -155,8 +155,8 @@ function! b:listEntry(...)
 
   let l:feed = webapi#atom#getFeed(
         \ l:api_url,
-        \ g:hateblo_user,
-        \ g:hateblo_api_key
+        \ g:hateblo_vim['user'],
+        \ g:hateblo_vim['api_key']
         \)
   let b:hateblo_entries = l:feed['entry']
 
@@ -175,13 +175,13 @@ endfunction
 function! b:detailEntry(entry_url)
   let l:entry = webapi#atom#getEntry(
         \ a:entry_url,
-        \ g:hateblo_user,
-        \ g:hateblo_api_key
+        \ g:hateblo_vim['user'],
+        \ g:hateblo_vim['api_key']
         \ )
   let l:escaped_entry_title = substitute(l:entry['title'], ' ', '\\ ', 'g')
   execute 'edit' l:escaped_entry_title
 
-  if exists('g:hateblo_WYSIWYG_mode') && g:hateblo_WYSIWYG_mode == 1
+  if exists("g:hateblo_vim['WYSIWYG_mode']") && g:hateblo_vim['WYSIWYG_mode'] == 1
     let l:lines = substitute(l:lines, '<br />', '\n', 'g')
   endif
 
