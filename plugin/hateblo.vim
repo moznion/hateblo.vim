@@ -30,6 +30,10 @@ function! s:createEntry()
   if l:lines[0][0:2] == '@#@'
     let l:title = l:lines[0][3:]
     call remove(l:lines, 0)
+
+    if l:title == ''
+      let l:title = '■'
+    endif
   endif
 
   let l:content = join(l:lines, "\n")
@@ -40,6 +44,10 @@ function! s:createEntry()
 
   if l:title == ''
     let l:title = input("Enter the title: ")
+  endif
+
+  if l:title == ''
+    let l:title = '■'
   endif
 
   if (exists("g:hateblo_vim['always_yes']") && g:hateblo_vim['always_yes'] == 1)
