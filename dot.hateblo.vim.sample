@@ -1,5 +1,7 @@
-let g:hateblo_user         = 'user_name'
-let g:hateblo_api_key      = 'api_key'
-let g:hateblo_api_endpoint = 'http://.../atom'
-let g:hateblo_WYSIWYG_mode = 0 | 1
-let g:hateblo_always_yes   = 0 | 1
+let g:hateblo_vim = {
+      \ 'user':         'user_name',
+      \ 'api_key':      'api_key',
+      \ 'api_endpoint': 'http://.../atom',
+      \ 'WYSIWYG_mode': 0 | 1,
+      \ 'always_yes':   0 | 1
+\ }
