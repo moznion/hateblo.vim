@@ -33,7 +33,7 @@ function! s:createEntry()
 
   let l:content = join(l:lines, "\n")
 
-  if g:hateblo_WYSIWYG_mode == 1
+  if exists('g:hateblo_WYSIWYG_mode') && g:hateblo_WYSIWYG_mode == 1
     let l:content = substitute(l:content, '\n', '<br />', 'g')
   endif
 
@@ -74,7 +74,7 @@ function! s:updateEntry(...)
 
   let l:content = join(l:lines, "\n")
 
-  if g:hateblo_WYSIWYG_mode == 1
+  if exists('g:hateblo_WYSIWYG_mode') && g:hateblo_WYSIWYG_mode == 1
     let l:content = substitute(l:content, '\n', '<br />', 'g')
   endif
 
@@ -165,7 +165,7 @@ function! b:detailEntry(entry_url)
   let l:escaped_entry_title = substitute(l:entry['title'], ' ', '\\ ', 'g')
   execute 'edit' l:escaped_entry_title
 
-  if g:hateblo_WYSIWYG_mode == 1
+  if exists('g:hateblo_WYSIWYG_mode') && g:hateblo_WYSIWYG_mode == 1
     let l:lines = substitute(l:lines, '<br />', '\n', 'g')
   endif
 
