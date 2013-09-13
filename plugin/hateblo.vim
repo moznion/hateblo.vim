@@ -41,19 +41,25 @@ function! s:createEntry()
     let l:title = input("Enter the title: ")
   endif
 
-  call webapi#atom#createEntry(
-        \ s:entry_api,
-        \ g:hateblo_user,
-        \ g:hateblo_api_key,
-        \ {
-        \   'title':        l:title,
-        \   'content':      l:content,
-        \   'content.type': 'text/plain',
-        \   'content.mode': ''
-        \ }
-        \)
-  redraw
-  echo "Done!"
+  let l:will_post = input('Post? (y/n) [y]: ')
+  if l:will_post == '' || l:will_post == 'y'
+    call webapi#atom#createEntry(
+          \ s:entry_api,
+          \ g:hateblo_user,
+          \ g:hateblo_api_key,
+          \ {
+          \   'title':        l:title,
+          \   'content':      l:content,
+          \   'content.type': 'text/plain',
+          \   'content.mode': ''
+          \ }
+          \)
+    redraw
+    echo 'Done!'
+  else
+    redraw
+    echo 'Canceled!'
+  endif
 endfunction
 
 function! s:updateEntry(...)
@@ -77,20 +83,25 @@ function! s:updateEntry(...)
     let l:title = a:000[0]
   endif
 
-  call webapi#atom#updateEntry(
-        \ b:hateblo_entry_url,
-        \ g:hateblo_user,
-        \ g:hateblo_api_key,
-        \ {
-        \   'title':        l:title,
-        \   'content':      l:content,
-        \   'content.type': 'text/plain',
-        \   'content.mode': ''
-        \ }
-        \)
-
-  redraw
-  echo "Done!"
+  let l:will_post = input('Post? (y/n) [y]: ')
+  if l:will_post == '' || l:will_post == 'y'
+    call webapi#atom#updateEntry(
+          \ b:hateblo_entry_url,
+          \ g:hateblo_user,
+          \ g:hateblo_api_key,
+          \ {
+          \   'title':        l:title,
+          \   'content':      l:content,
+          \   'content.type': 'text/plain',
+          \   'content.mode': ''
+          \ }
+          \)
+    redraw
+    echo "Done!"
+  else
+    redraw
+    echo 'Canceled!'
+  endif
 endfunction
 
 function! s:deleteEntry()
@@ -101,17 +112,23 @@ function! s:deleteEntry()
     return
   endif
 
-  call webapi#atom#deleteEntry(
-        \ b:hateblo_entry_url,
-        \ g:hateblo_user,
-        \ g:hateblo_api_key,
-        \)
+  let l:will_post = input('Delete? (y/n) [y]: ')
+  if l:will_post == '' || l:will_post == 'y'
+    call webapi#atom#deleteEntry(
+          \ b:hateblo_entry_url,
+          \ g:hateblo_user,
+          \ g:hateblo_api_key,
+          \)
 
-  unlet b:hateblo_entry_title
-  unlet b:hateblo_entry_url
+    unlet b:hateblo_entry_title
+    unlet b:hateblo_entry_url
 
-  redraw
-  echo "Done!"
+    redraw
+    echo "Done!"
+  else
+    redraw
+    echo 'Canceled!'
+  endif
 endfunction
 
 function! b:listEntry(...)
