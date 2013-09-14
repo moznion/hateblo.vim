@@ -18,12 +18,13 @@ let s:unite_hateblo_entry_list_source = {'name': 'hateblo_entry_list'}
 
 let s:entry_api = g:hateblo_vim['api_endpoint'] . '/entry'
 
-command! -nargs=* HatebloCreate call s:createEntry()
-command! -nargs=* HatebloList   call b:listEntry()
-command! -nargs=* HatebloUpdate call s:updateEntry(<f-args>)
-command! -nargs=* HatebloDelete call s:deleteEntry()
+command! -nargs=* HatebloCreate      call s:createEntry('no')
+command! -nargs=* HatebloCreateDraft call s:createEntry('yes')
+command! -nargs=* HatebloList        call b:listEntry()
+command! -nargs=* HatebloUpdate      call s:updateEntry(<f-args>)
+command! -nargs=* HatebloDelete      call s:deleteEntry()
 
-function! s:createEntry()
+function! s:createEntry(is_draft)
   let l:lines = getline('1', '$')
 
   let l:title = ''
@@ -65,7 +66,10 @@ function! s:createEntry()
           \   'title':        l:title,
           \   'content':      l:content,
           \   'content.type': 'text/plain',
-          \   'content.mode': ''
+          \   'content.mode': '',
+          \   'app:control':  {
+          \     'app:draft': a:is_draft
+          \   }
           \ }
           \)
     redraw
