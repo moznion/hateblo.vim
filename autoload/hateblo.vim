@@ -176,12 +176,20 @@ function! hateblo#detailEntry(entry_url)
     let l:lines = substitute(l:lines, '<br />', '\n', 'g')
   endif
 
+  let l:content_type = 'html' " TODO or text?
+  if l:entry['content.type'] ==# 'text/x-markdown'
+    let l:content_type = 'markdown'
+  elseif l:entry['content.type'] ==# 'text/x-hatena-syntax'
+    let l:content_type = 'hatena'
+  endif
+
   let l:lines = split(l:entry['content'], '\n')
   call append(1, l:lines)
 
   let l:editor_buf_num = bufnr(l:escaped_entry_title)
   call setbufvar(l:editor_buf_num, 'hateblo_entry_title', l:entry['title'])
   call setbufvar(l:editor_buf_num, 'hateblo_entry_url', a:entry_url)
+  execute 'setlocal filetype=' . l:content_type
 endfunction
 
 let &cpo = s:save_cpo
