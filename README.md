@@ -52,7 +52,7 @@ Provided commands
 
 新しいブログエントリを**「下書き」として**投稿します．
 それ以外の機能は `:HatebloCreate` と同等の機能を提供しています．
-本機能を利用する場合は https://github.com/mattn/webapi-vim/commit/22261e094ad01faa433fe2c7219c6be14ce127cd 以降の (つまり新しい) [webapi-vim](https://github.com/mattn/webapi-vim)がインストールされている必要があります。
+本機能を利用する場合は `22261e094ad01faa433fe2c7219c6be14ce127cd` 以降の (つまり新しい) [webapi-vim](https://github.com/mattn/webapi-vim)がインストールされている必要があります。
 
 - :HatebloList
 
