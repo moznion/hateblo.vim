@@ -18,9 +18,9 @@ let s:unite_hateblo_list_source = {
 
 function! s:unite_hateblo_list_source.action_table.on_choose.func(candidate)
   if a:candidate.action__action == 'edit_entry'
-    call b:detailEntry(a:candidate.action__url)
+    call hateblo#detailEntry(a:candidate.action__url)
   elseif a:candidate.action__action == 'next_page'
-    call b:listEntry(a:candidate.action__url)
+    call hateblo#listEntry(a:candidate.action__url)
   endif
 endfunction
 
