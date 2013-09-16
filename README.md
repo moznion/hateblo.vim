@@ -48,6 +48,12 @@ Provided commands
 1行目に`@#@`から始まる文を記述すると，その行はタイトルとして扱われます．
 もしも1行目でタイトルを指定しなかった場合は，インタラクティブにタイトルが要求されます．
 
+- :HatebloCreateDraft
+
+新しいブログエントリを**「下書き」として**投稿します．
+それ以外の機能は `:HatebloCreate` と同等の機能を提供しています．
+本機能を利用する場合は https://github.com/mattn/webapi-vim/commit/22261e094ad01faa433fe2c7219c6be14ce127cd 以降の (つまり新しい) [webapi-vim](https://github.com/mattn/webapi-vim)がインストールされている必要があります。
+
 - :HatebloList
 
 ブログエントリのリストを unite source 形式で表示します．
