@@ -170,7 +170,7 @@ function! hateblo#detailEntry(entry_url)
         \ g:hateblo_vim['api_key']
         \ )
   let l:escaped_entry_title = substitute(l:entry['title'], ' ', '\\ ', 'g')
-  execute 'edit' l:escaped_entry_title
+  execute g:hateblo_vim['edit_command'] . l:escaped_entry_title
 
   if exists("g:hateblo_vim['WYSIWYG_mode']") && g:hateblo_vim['WYSIWYG_mode'] == 1
     let l:lines = substitute(l:lines, '<br />', '\n', 'g')
