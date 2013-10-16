@@ -7,6 +7,14 @@ if exists('g:loaded_hateblo')
   finish
 endif
 
+try
+  execute 'source $HOME/.hateblo.vim'
+catch
+  if !exists('g:hateblo_vim')
+    finish
+  endif
+endtry
+
 let s:save_cpo = &cpo
 set cpo&vim
 
@@ -16,8 +24,6 @@ set cpo&vim
 " - g:hateblo_vim['api_endpoint']   Endpoint of API
 " - g:hateblo_vim['WYSIWYG_mode']   ( 0 | 1 )
 " - g:hateblo_vim['always_yes']     ( 0 | 1 )
-
-source $HOME/.hateblo.vim
 
 let g:hateblo_vim['edit_command'] = get(g:hateblo_vim, 'edit_command', 'edit')
 
