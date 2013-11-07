@@ -10,10 +10,12 @@ endif
 try
   execute 'source $HOME/.hateblo.vim'
 catch
-  if !exists('g:hateblo_vim')
-    finish
-  endif
+  " DO NOTHING
 endtry
+
+if !exists('g:hateblo_vim')
+  finish
+endif
 
 let s:save_cpo = &cpo
 set cpo&vim
