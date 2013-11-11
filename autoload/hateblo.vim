@@ -30,6 +30,9 @@ function! hateblo#createEntry(is_draft)
     let l:title = '■'
   endif
 
+  " remove leading white spaces
+  let l:title = substitute(l:title, "^[[:blank:]]\*", "", "")
+
   let l:category_str = input("Enter the categories: ")
   let l:category     = split(l:category_str, ',')
 
