@@ -7,11 +7,16 @@ if exists('g:loaded_hateblo')
   finish
 endif
 
+let s:config_file_exists = 1
 try
   execute 'source $HOME/.hateblo.vim'
 catch
-  " DO NOTHING
+  let s:config_file_exists = 0 " .hateblo.vim doesn't exist
 endtry
+
+if s:config_file_exists == 1
+  source $HOME/.hateblo.vim
+endif
 
 if !exists('g:hateblo_vim')
   finish
