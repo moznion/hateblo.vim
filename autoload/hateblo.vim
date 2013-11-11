@@ -30,6 +30,9 @@ function! hateblo#createEntry(is_draft)
     let l:title = '■'
   endif
 
+  let l:category_str = input("Enter the categories: ")
+  let l:category     = split(l:category_str, ',')
+
   if (exists("g:hateblo_vim['always_yes']") && g:hateblo_vim['always_yes'] == 1)
     let l:will_post = 'y'
   else
@@ -48,7 +51,8 @@ function! hateblo#createEntry(is_draft)
           \   'content.mode': '',
           \   'app:control':  {
           \     'app:draft': a:is_draft
-          \   }
+          \   },
+          \   'category': l:category
           \ }
           \)
     redraw
