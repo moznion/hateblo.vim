@@ -112,6 +112,18 @@ function! hateblo#updateEntry(...)
     let l:title = a:000[0]
   endif
 
+  let l:default_category = ''
+  if b:hateblo_category_str != '' " exist default values
+    let l:default_category = b:hateblo_category_str
+  endif
+
+  let l:category_str = input("Enter the categories [" . l:default_category . "]: ")
+  let l:category     = split(l:category_str, ',')
+
+  if l:category == []
+    let l:category = split(l:default_category, ',')
+  endif
+
   if (exists("g:hateblo_vim['always_yes']") && g:hateblo_vim['always_yes'] == 1)
     let l:will_update = 'y'
   else
@@ -127,7 +139,8 @@ function! hateblo#updateEntry(...)
           \   'title':        l:title,
           \   'content':      l:content,
           \   'content.type': 'text/plain',
-          \   'content.mode': ''
+          \   'content.mode': '',
+          \   'category': l:category
           \ }
           \)
     redraw
@@ -178,10 +191,11 @@ function! hateblo#detailEntry(entry_url)
         \ )
   let l:escaped_entry_title = substitute(l:entry['title'], ' ', '\\ ', 'g')
 
+  let l:spacer = ''
   if l:escaped_entry_title[0] != ' '
-    let l:escaped_entry_title = ' ' . l:escaped_entry_title
+    let l:spacer = ' '
   endif
-  execute g:hateblo_vim['edit_command'] . l:escaped_entry_title
+  execute g:hateblo_vim['edit_command'] . l:spacer . l:escaped_entry_title
 
   if exists("g:hateblo_vim['WYSIWYG_mode']") && g:hateblo_vim['WYSIWYG_mode'] == 1
     let l:lines = substitute(l:lines, '<br />', '\n', 'g')
@@ -194,12 +208,19 @@ function! hateblo#detailEntry(entry_url)
     let l:content_type = 'hatena'
   endif
 
+  let l:categories = []
+  for l:category in l:entry['category']
+    call add(l:categories, l:category['term'])
+  endfor
+  let l:hateblo_category_str = join(l:categories, ', ')
+
   let l:lines = split(l:entry['content'], '\n')
   call append(1, l:lines)
 
   let l:editor_buf_num = bufnr(l:escaped_entry_title)
   call setbufvar(l:editor_buf_num, 'hateblo_entry_title', l:entry['title'])
   call setbufvar(l:editor_buf_num, 'hateblo_entry_url', a:entry_url)
+  call setbufvar(l:editor_buf_num, 'hateblo_category_str', l:hateblo_category_str)
   execute 'setlocal filetype=' . l:content_type
 endfunction
 
