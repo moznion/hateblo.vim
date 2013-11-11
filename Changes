@@ -1,5 +1,11 @@
 Revision history for hateblo.vim
 
+0.3.0 2013-11-12T03:14:34Z
+    - Support category
+    - Enable to choose command to open entry
+    - Suppress some nagging warning messages
+    - Bug fix
+
 0.2.0 2013-09-14T03:10:28Z
     - Unite global variables
 
