@@ -14,15 +14,24 @@ Getting started
 
  ```vim
  let g:hateblo_vim = {
-       \ 'user':         'user_name',           " はてなのユーザid
-       \ 'api_key':      'api_key',             " はてなブログの設定画面で確認できるAPIキー
-       \ 'api_endpoint': 'http://.../atom',     " はてなブログの設定画面で確認できるルートエンドポイント
-       \ 'WYSIWYG_mode': 0 | 1,                 " 見たままモードを利用している場合は1に．それ以外は0に．
-       \ 'always_yes':   0 | 1                  " 確認プロンプトを出さずに常にyesにするときは1に．
+       \ 'user':         'user_name',
+       \ 'api_key':      'api_key',
+       \ 'api_endpoint': 'http://.../atom',
+       \ 'WYSIWYG_mode': 0 | 1,
+       \ 'always_yes':   0 | 1
  \ }
  ```
 
- なお，`WYSIWYG_mode` と `always_yes` はオプショナルなので，設定しなくても良いです (それ以外は必須)．オプショナル値が未設定の時は0が入っているとみなされます．
+- user
+はてなのユーザID
+- api_key
+はてなブログの設定画面で確認できるAPIキー
+- api_endpoint
+はてなブログの設定画面で確認できるルートエンドポイント
+- WYSIWYG_mode (オプショナル, デフォルト値:0)
+見たままモードを利用している場合は1に．それ以外は0に
+- always_yes (オプショナル，デフォルト値:0)
+確認プロンプトを出さずに常にyesにするときは1に
 
 3. 本モジュールの依存モジュールをインストールして下さい. もしもNeoBundleを利用しているなら, `.vimrc`に以下の記述を追加するとよいでしょう．
 
