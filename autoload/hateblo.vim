@@ -39,10 +39,10 @@ function! hateblo#createEntry(is_draft)
   if (exists("g:hateblo_vim['always_yes']") && g:hateblo_vim['always_yes'] == 1)
     let l:will_post = 'y'
   else
-    let l:will_post = input('Post? (y/n) [y]: ')
+    let l:will_post = input('Post? (y/n) [n]: ')
   endif
 
-  if l:will_post == '' || l:will_post == 'y'
+  if l:will_post == 'y'
     call webapi#atom#createEntry(
           \ s:entry_api,
           \ g:hateblo_vim['user'],
@@ -127,10 +127,10 @@ function! hateblo#updateEntry(...)
   if (exists("g:hateblo_vim['always_yes']") && g:hateblo_vim['always_yes'] == 1)
     let l:will_update = 'y'
   else
-    let l:will_update = input('Update? (y/n) [y]: ')
+    let l:will_update = input('Update? (y/n) [n]: ')
   endif
 
-  if l:will_update == '' || l:will_update == 'y'
+  if l:will_update == 'y'
     call webapi#atom#updateEntry(
           \ b:hateblo_entry_url,
           \ g:hateblo_vim['user'],
@@ -162,10 +162,10 @@ function! hateblo#deleteEntry()
   if (exists("g:hateblo_vim['always_yes']") && g:hateblo_vim['always_yes'] == 1)
     let l:will_delete = 'y'
   else
-    let l:will_delete = input('Delete? (y/n) [y]: ')
+    let l:will_delete = input('Delete? (y/n) [n]: ')
   endif
 
-  if l:will_delete == '' || l:will_delete == 'y'
+  if l:will_delete == 'y'
     call webapi#atom#deleteEntry(
           \ b:hateblo_entry_url,
           \ g:hateblo_vim['user'],
