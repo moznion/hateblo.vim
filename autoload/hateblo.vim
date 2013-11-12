@@ -124,6 +124,11 @@ function! hateblo#updateEntry(...)
     let l:category = split(l:default_category, ',')
   endif
 
+  " Remove tags
+  if l:category_str ==# '<nil>'
+    let l:category = []
+  endif
+
   if (exists("g:hateblo_vim['always_yes']") && g:hateblo_vim['always_yes'] == 1)
     let l:will_update = 'y'
   else
