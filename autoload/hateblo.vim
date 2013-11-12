@@ -124,7 +124,7 @@ function! hateblo#updateEntry(...)
     let l:category = split(l:default_category, ',')
   endif
 
-  " Remove tags
+  " Remove categories
   if l:category_str ==# '<nil>'
     let l:category = []
   endif
