@@ -34,7 +34,7 @@ function! hateblo#createEntry(is_draft)
   let l:title = substitute(l:title, "^[[:blank:]]\*", "", "")
 
   let l:category_str = input("Enter the categories: ")
-  let l:category     = split(l:category_str, ',')
+  let l:category     = map(split(l:category_str, ','), 'substitute(v:val, "^[[:blank:]]\*", "", "")')
 
   if (exists("g:hateblo_vim['always_yes']") && g:hateblo_vim['always_yes'] == 1)
     let l:will_post = 'y'
@@ -127,6 +127,8 @@ function! hateblo#updateEntry(...)
   " Remove categories
   if l:category_str ==# '<nil>'
     let l:category = []
+  else
+    let l:category = map(l:category, 'substitute(v:val, "^[[:blank:]]\*", "", "")')
   endif
 
   if (exists("g:hateblo_vim['always_yes']") && g:hateblo_vim['always_yes'] == 1)
