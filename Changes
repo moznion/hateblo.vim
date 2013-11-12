@@ -1,5 +1,11 @@
 Revision history for hateblo.vim
 
+0.3.1 2013-11-13T02:51:11Z
+    - Enable to erase categories on updating
+    - Change default value that is required in interactive phase to 'n' (no) from 'y' (yes)
+    - Fix document (sample configuration)
+    - Fix some tiny bugs
+
 0.3.0 2013-11-12T03:14:34Z
     - Support category
     - Enable to choose command to open entry
