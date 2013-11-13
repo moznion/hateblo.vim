@@ -3,5 +3,6 @@ let g:hateblo_vim = {
       \ 'api_key':      'api_key',
       \ 'api_endpoint': 'http://.../atom',
       \ 'WYSIWYG_mode': 0 | 1,
-      \ 'always_yes':   0 | 1
+      \ 'always_yes':   0 | 1,
+      \ 'edit_command': 'tabnew'
 \ }
