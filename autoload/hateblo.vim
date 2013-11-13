@@ -204,10 +204,6 @@ function! hateblo#detailEntry(entry_url)
   endif
   execute g:hateblo_vim['edit_command'] . l:spacer . l:escaped_entry_title
 
-  if exists("g:hateblo_vim['WYSIWYG_mode']") && g:hateblo_vim['WYSIWYG_mode'] == 1
-    let l:lines = substitute(l:lines, '<br />', '\n', 'g')
-  endif
-
   let l:content_type = 'html' " TODO or text?
   if l:entry['content.type'] ==# 'text/x-markdown'
     let l:content_type = 'markdown'
@@ -222,7 +218,11 @@ function! hateblo#detailEntry(entry_url)
   let l:hateblo_category_str = join(l:categories, ', ')
 
   let l:lines = split(l:entry['content'], '\n')
-  call append(1, l:lines)
+  if exists("g:hateblo_vim['WYSIWYG_mode']") && g:hateblo_vim['WYSIWYG_mode'] == 1
+    let l:lines = map(l:lines, 'substitute(v:val, "<br />", "\n", "g")')
+  endif
+  let l:lines = map(l:lines, 'substitute(v:val, "$", "", "g")') " Remove 'CR' newline characters
+  call append(0, l:lines)
 
   let l:editor_buf_num = bufnr(l:escaped_entry_title)
   call setbufvar(l:editor_buf_num, 'hateblo_entry_title', l:entry['title'])
