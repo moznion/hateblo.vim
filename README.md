@@ -18,7 +18,8 @@ Getting started
        \ 'api_key':      'api_key',
        \ 'api_endpoint': 'http://.../atom',
        \ 'WYSIWYG_mode': 0 | 1,
-       \ 'always_yes':   0 | 1
+       \ 'always_yes':   0 | 1,
+       \ 'edit_command': 'tabnew'
  \ }
  ```
 
@@ -29,6 +30,7 @@ Getting started
         api_endpoint: はてなブログの設定画面で確認できるルートエンドポイント
         WYSIWYG_mode: 見たままモードを利用している場合は1に．それ以外は0に (オプショナル, デフォルト値:0)
         always_yes:   確認プロンプトを出さずに常にyesにするときは1に (オプショナル，デフォルト値:0)
+        edit_command: 記事を編集する際のファイルの開き方を指定 (デフォルト:edit)
 
 3. 本モジュールの依存モジュールをインストールして下さい. もしもNeoBundleを利用しているなら, `.vimrc`に以下の記述を追加するとよいでしょう．
 
