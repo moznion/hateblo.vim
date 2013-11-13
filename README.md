@@ -19,7 +19,7 @@ Getting started
        \ 'api_endpoint': 'http://.../atom',
        \ 'WYSIWYG_mode': 0 | 1,
        \ 'always_yes':   0 | 1,
-       \ 'edit_command': 'tabnew'
+       \ 'edit_command': 'edit' | 'tabnew' | 'split' | 'vsplit' | etc...
  \ }
  ```
 
@@ -30,7 +30,7 @@ Getting started
         api_endpoint: はてなブログの設定画面で確認できるルートエンドポイント
         WYSIWYG_mode: 見たままモードを利用している場合は1に．それ以外は0に (オプショナル, デフォルト値:0)
         always_yes:   確認プロンプトを出さずに常にyesにするときは1に (オプショナル，デフォルト値:0)
-        edit_command: 記事を編集する際のファイルの開き方を指定 (デフォルト:edit)
+        edit_command: 記事を編集する際のファイルの開き方を指定 (オプショナル，デフォルト値:edit)
 
 3. 本モジュールの依存モジュールをインストールして下さい. もしもNeoBundleを利用しているなら, `.vimrc`に以下の記述を追加するとよいでしょう．
 
@@ -78,7 +78,7 @@ Provided commands
 引数の`new_entry_title`はオプショナルです．もしもタイトルを変更したい場合は指定してください．
 引数が指定されなかった場合，タイトルは変更されません．
 また，`HatebloCreate`とは異なり，1行目に`@#@`から始まる文を記述してもタイトルとしては扱われません．
-なお，タグ指定時に`<nil>`というワードを指定すると設定されているタグをクリアできます．
+なお，カテゴリ指定時に`<nil>`というワードを指定すると設定されているカテゴリをクリアできます．
 
 - :HatebloDelete
 

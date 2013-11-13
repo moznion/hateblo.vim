@@ -31,7 +31,7 @@ set cpo&vim
 " - g:hateblo_vim['api_endpoint']   Endpoint of API
 " - g:hateblo_vim['WYSIWYG_mode']   ( 0 | 1 )
 " - g:hateblo_vim['always_yes']     ( 0 | 1 )
-" - g:hateblo_vim['edit_command']   cmd
+" - g:hateblo_vim['edit_command']   Command to open the entry
 
 let g:hateblo_vim['edit_command'] = get(g:hateblo_vim, 'edit_command', 'edit')
 
