@@ -221,6 +221,7 @@ function! hateblo#detailEntry(entry_url)
   if exists("g:hateblo_vim['WYSIWYG_mode']") && g:hateblo_vim['WYSIWYG_mode'] == 1
     let l:lines = map(l:lines, 'substitute(v:val, "<br />", "\n", "g")')
   endif
+  let l:lines = map(l:lines, 'substitute(v:val, "$", "", "g")') " Remove 'CR' newline characters
   call append(0, l:lines)
 
   let l:editor_buf_num = bufnr(l:escaped_entry_title)
