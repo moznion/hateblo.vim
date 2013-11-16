@@ -131,6 +131,13 @@ function! hateblo#updateEntry(...)
     let l:category = map(l:category, 'substitute(v:val, "^[[:blank:]]\*", "", "")')
   endif
 
+  if (b:hateblo_is_draft ==# 'yes')
+    let l:publish_draft = input('Is this draft exhibited? (y/n) [n]: ')
+    if (l:publish_draft == 'y')
+      let b:hateblo_is_draft = 'no'
+    endif
+  endif
+
   if (exists("g:hateblo_vim['always_yes']") && g:hateblo_vim['always_yes'] == 1)
     let l:will_update = 'y'
   else
@@ -147,6 +154,9 @@ function! hateblo#updateEntry(...)
           \   'content':      l:content,
           \   'content.type': 'text/plain',
           \   'content.mode': '',
+          \   'app:control':  {
+          \     'app:draft': b:hateblo_is_draft
+          \   },
           \   'category': l:category
           \ }
           \)
@@ -228,6 +238,7 @@ function! hateblo#detailEntry(entry_url)
   call setbufvar(l:editor_buf_num, 'hateblo_entry_title', l:entry['title'])
   call setbufvar(l:editor_buf_num, 'hateblo_entry_url', a:entry_url)
   call setbufvar(l:editor_buf_num, 'hateblo_category_str', l:hateblo_category_str)
+  call setbufvar(l:editor_buf_num, 'hateblo_is_draft', l:entry['app:control']['app:draft'])
   execute 'setlocal filetype=' . l:content_type
 endfunction
 
