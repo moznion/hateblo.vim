@@ -1,5 +1,8 @@
 Revision history for hateblo.vim
 
+0.3.2 2013-11-16T16:51:02Z
+    - Activate draft mode for updating entry
+
 0.3.1 2013-11-13T02:51:11Z
     - Enable to erase categories on updating
     - Change default value that is required in interactive phase to 'n' (no) from 'y' (yes)
