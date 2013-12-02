@@ -32,6 +32,11 @@ function! s:unite_hateblo_list_source.gather_candidates(args, context)
     let l:entry_title      = l:entry['title']
     let l:entry_updated_at = l:entry['updated']
     let l:entry_url = l:entry['link'][0]['href'] " XXX <= I think not good way...
+    let l:draft = l:entry['app:control']['app:draft']
+    if l:draft == 'yes'
+      let l:entry_title = '[draft] ' . l:entry_title
+    endif
+    
     call add(l:entry_list, {
       \   'word':           l:entry_title . ' (' . l:entry_updated_at . ')',
       \   'source':         'hateblo-list',
