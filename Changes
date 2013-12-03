@@ -1,5 +1,8 @@
 Revision history for hateblo.vim
 
+0.3.3 2013-12-03T14:01:46Z
+    - Show draft status on entries list view (@basyura++)
+
 0.3.2 2013-11-16T16:51:02Z
     - Activate draft mode for updating entry
 
