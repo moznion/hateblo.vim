@@ -38,7 +38,7 @@ let g:hateblo_vim['edit_command'] = get(g:hateblo_vim, 'edit_command', 'edit')
 command! -nargs=0 HatebloCreate      call hateblo#createEntry('no')
 command! -nargs=0 HatebloCreateDraft call hateblo#createEntry('yes')
 command! -nargs=0 HatebloList        call hateblo#listEntry()
-command! -nargs=? HatebloUpdate      call hateblo#updateEntry(<f-args>)
+command! -nargs=0 HatebloUpdate      call hateblo#updateEntry(0)
 command! -nargs=0 HatebloDelete      call hateblo#deleteEntry()
 
 let g:loaded_hateblo = 1
