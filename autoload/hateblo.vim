@@ -1,63 +1,13 @@
 let s:save_cpo = &cpo
 set cpo&vim
 
-let s:entry_api = g:hateblo_vim['api_endpoint'] . '/entry'
-
 function! hateblo#createEntry(is_draft)
-  let l:lines = getline('1', '$')
-
-  let l:title = ''
-  if l:lines[0][0:2] == '@#@'
-    let l:title = l:lines[0][3:]
-    call remove(l:lines, 0)
-
-    if l:title == ''
-      let l:title = '■'
-    endif
-  endif
-
+  let l:title = s:get_title(1)
+  let l:category = s:get_category(1)
+  let l:lines = s:format_lines(getline('1', '$'))
   let l:content = join(l:lines, "\n")
-
-  if exists("g:hateblo_vim['WYSIWYG_mode']") && g:hateblo_vim['WYSIWYG_mode'] == 1
-    let l:content = substitute(l:content, '\n', '<br />', 'g')
-  endif
-
-  if l:title == ''
-    let l:title = input("Enter the title: ")
-  endif
-
-  if l:title == ''
-    let l:title = '■'
-  endif
-
-  " remove leading white spaces
-  let l:title = substitute(l:title, "^[[:blank:]]\*", "", "")
-
-  let l:category_str = input("Enter the categories: ")
-  let l:category     = map(split(l:category_str, ','), 'substitute(v:val, "^[[:blank:]]\*", "", "")')
-
-  if (exists("g:hateblo_vim['always_yes']") && g:hateblo_vim['always_yes'] == 1)
-    let l:will_post = 'y'
-  else
-    let l:will_post = input('Post? (y/n) [n]: ')
-  endif
-
-  if l:will_post == 'y'
-    call webapi#atom#createEntry(
-          \ s:entry_api,
-          \ g:hateblo_vim['user'],
-          \ g:hateblo_vim['api_key'],
-          \ {
-          \   'title':        l:title,
-          \   'content':      l:content,
-          \   'content.type': 'text/plain',
-          \   'content.mode': '',
-          \   'app:control':  {
-          \     'app:draft': a:is_draft
-          \   },
-          \   'category': l:category
-          \ }
-          \)
+  if s:ask('Post?')
+    call s:create(l:title, l:content, l:category, a:is_draft)
     redraw
     echo 'Done!'
   else
@@ -66,100 +16,17 @@ function! hateblo#createEntry(is_draft)
   endif
 endfunction
 
-function! hateblo#listEntry(...)
-  let l:api_url = s:entry_api
-  if exists('a:000[0]')
-    let l:api_url = a:000[0]
-  endif
-
-  let l:feed = webapi#atom#getFeed(
-        \ l:api_url,
-        \ g:hateblo_vim['user'],
-        \ g:hateblo_vim['api_key']
-        \)
-  let b:hateblo_entries = l:feed['entry']
-
-  let b:hateblo_next_page = ''
-  let l:links = l:feed['link']
-  for l:link in l:links
-    if l:link['rel'] == 'next'
-      let b:hateblo_next_page = l:link['href']
-      break
-    endif
-  endfor
-
-  Unite hateblo-list
-endfunction
-
-function! hateblo#updateEntry(...)
-  if !exists('b:hateblo_entry_title') || !exists('b:hateblo_entry_url')
-    echohl WarningMsg
-    echo 'This entry does not exist on remote!'
-    echohl None
-    return
-  endif
-
-  let l:lines = getline('1', '$')
-
+function! hateblo#updateEntry(silent)
+  call s:check_buffer()
+  let l:title = s:get_title(a:silent)
+  let l:category = s:get_category(a:silent)
+  let l:lines = s:format_lines(s:strip_header(getline('1', '$')))
   let l:content = join(l:lines, "\n")
-
-  if exists("g:hateblo_vim['WYSIWYG_mode']") && g:hateblo_vim['WYSIWYG_mode'] == 1
-    let l:content = substitute(l:content, '\n', '<br />', 'g')
+  if !a:silent
+    call s:check_draft()
   endif
-
-  let l:title = b:hateblo_entry_title
-  if exists('a:000[0]')
-    let l:title = a:000[0]
-  endif
-
-  let l:default_category = ''
-  if b:hateblo_category_str != '' " exist default values
-    let l:default_category = b:hateblo_category_str
-  endif
-
-  let l:category_str = input("Enter the categories [" . l:default_category . "]: ")
-  let l:category     = split(l:category_str, ',')
-
-  if l:category == []
-    let l:category = split(l:default_category, ',')
-  endif
-
-  " Remove categories
-  if l:category_str ==# '<nil>'
-    let l:category = []
-  else
-    let l:category = map(l:category, 'substitute(v:val, "^[[:blank:]]\*", "", "")')
-  endif
-
-  if (b:hateblo_is_draft ==# 'yes')
-    let l:publish_draft = input('Is this draft exhibited? (y/n) [n]: ')
-    if (l:publish_draft == 'y')
-      let b:hateblo_is_draft = 'no'
-    endif
-  endif
-
-  if (exists("g:hateblo_vim['always_yes']") && g:hateblo_vim['always_yes'] == 1)
-    let l:will_update = 'y'
-  else
-    let l:will_update = input('Update? (y/n) [n]: ')
-  endif
-
-  if l:will_update == 'y'
-    call webapi#atom#updateEntry(
-          \ b:hateblo_entry_url,
-          \ g:hateblo_vim['user'],
-          \ g:hateblo_vim['api_key'],
-          \ {
-          \   'title':        l:title,
-          \   'content':      l:content,
-          \   'content.type': 'text/plain',
-          \   'content.mode': '',
-          \   'app:control':  {
-          \     'app:draft': b:hateblo_is_draft
-          \   },
-          \   'category': l:category
-          \ }
-          \)
+  if a:silent || s:ask('Update?')
+    call s:update(l:title, l:content, l:category)
     redraw
     echo "Done!"
   else
@@ -169,29 +36,15 @@ function! hateblo#updateEntry(...)
 endfunction
 
 function! hateblo#deleteEntry()
-  if !exists('b:hateblo_entry_url')
-    echohl WarningMsg
-    echo 'This entry does not exist on remote!'
-    echohl None
-    return
-  endif
-
-  if (exists("g:hateblo_vim['always_yes']") && g:hateblo_vim['always_yes'] == 1)
-    let l:will_delete = 'y'
-  else
-    let l:will_delete = input('Delete? (y/n) [n]: ')
-  endif
-
-  if l:will_delete == 'y'
+  call s:check_buffer()
+  if s:ask('Delete?')
     call webapi#atom#deleteEntry(
           \ b:hateblo_entry_url,
           \ g:hateblo_vim['user'],
           \ g:hateblo_vim['api_key'],
           \)
-
     unlet b:hateblo_entry_title
     unlet b:hateblo_entry_url
-
     redraw
     echo "Done!"
   else
@@ -200,47 +53,258 @@ function! hateblo#deleteEntry()
   endif
 endfunction
 
+function! hateblo#readEntry(entry_url)
+  let l:entry = s:get(a:entry_url)
+  let l:lines = s:get_lines(l:entry)
+  call append(1, l:lines)
+  call append(1, s:title_prefix . l:entry['title'])
+  call append(2, s:category_prefix . join(s:get_entry_category(l:entry), ', '))
+  call s:save_entry_meta_to_buffer(a:entry_url, l:entry)
+endfunction
+
 function! hateblo#detailEntry(entry_url)
-  let l:entry = webapi#atom#getEntry(
+  let l:entry = s:get(a:entry_url)
+  let l:escaped_entry_title = s:escape_space(l:entry['title'])
+  execute g:hateblo_vim['edit_command'] . s:prepend_space(l:escaped_entry_title)
+  let l:lines = s:get_lines(l:entry)
+  call append(0, l:lines)
+  call s:save_entry_meta_to_buffer(a:entry_url, l:entry)
+endfunction
+
+function! hateblo#listEntry(...)
+  if exists('a:000[0]')
+    let l:feed = hateblo#getFeed(a:000[0])
+  else
+    let l:feed = hateblo#getFeed(s:entry_api)
+  endif
+  call s:save_feed_meta_to_buffer(l:feed)
+  Unite hateblo-list
+endfunction
+
+function! hateblo#newEntry()
+  let l:entry_url = s:create('', '', [], 'yes')
+  return hateblo#getEntryID(l:entry_url)
+endfunction
+
+function! hateblo#getEntryID(entry_url)
+  let l:sub = substitute(a:entry_url, s:entry_api, '', '')
+  if l:sub[0] == '/'
+    return l:sub[1:]
+  else
+    echoerr 'This is not entry url'
+  endif
+endfunction
+
+function! hateblo#getFeed(api_url)
+  return webapi#atom#getFeed(
+        \ a:api_url,
+        \ g:hateblo_vim['user'],
+        \ g:hateblo_vim['api_key']
+        \)
+endfunction
+
+function! hateblo#getNextPageLink(feed)
+  for l:link in a:feed['link']
+    if l:link['rel'] == 'next'
+      return l:link['href']
+    endif
+  endfor
+endfunction
+
+function! hateblo#getFirstPageLink(feed)
+  for l:link in a:feed['link']
+    if l:link['rel'] == 'first'
+      return l:link['href']
+    endif
+  endfor
+endfunction
+
+
+let s:entry_api = g:hateblo_vim['api_endpoint'] . '/entry'
+let s:title_prefix = 'TITLE:'
+let s:category_prefix = 'CATEGORY:'
+
+function! s:create(title, content, category, is_draft)
+  return webapi#atom#createEntry(
+        \ s:entry_api,
+        \ g:hateblo_vim['user'],
+        \ g:hateblo_vim['api_key'],
+        \ {
+        \   'title': a:title,
+        \   'content': a:content,
+        \   'content.type': 'text/plain',
+        \   'content.mode': '',
+        \   'app:control':  {
+        \     'app:draft': a:is_draft
+        \   },
+        \   'category': a:category
+        \ }
+        \)
+endfunction
+
+function! s:update(title, content, category)
+  call webapi#atom#updateEntry(
+        \ b:hateblo_entry_url,
+        \ g:hateblo_vim['user'],
+        \ g:hateblo_vim['api_key'],
+        \ {
+        \   'title':        a:title,
+        \   'content':      a:content,
+        \   'content.type': 'text/plain',
+        \   'content.mode': '',
+        \   'app:control':  {
+        \     'app:draft': b:hateblo_is_draft
+        \   },
+        \   'category': a:category
+        \ }
+        \)
+endfunction
+
+function! s:get(entry_url)
+  return webapi#atom#getEntry(
         \ a:entry_url,
         \ g:hateblo_vim['user'],
         \ g:hateblo_vim['api_key']
         \ )
-  let l:escaped_entry_title = substitute(l:entry['title'], ' ', '\\ ', 'g')
+endfunction
 
-  let l:spacer = ''
-  if l:escaped_entry_title[0] != ' '
-    let l:spacer = ' '
+function! s:strip_whitespace(str)
+  let l:str = substitute(a:str, '^\s\+', '', '')
+  return substitute(l:str, '\s\+$', '', '')
+endfunction
+
+function! s:escape_space(title_str)
+  return substitute(a:title_str, ' ', '\\ ', 'g')
+endfunction
+
+function! s:prepend_space(str)
+  if a:str[0] == ' '
+    return a:str
+  else
+    return ' ' . a:str
   endif
-  execute g:hateblo_vim['edit_command'] . l:spacer . l:escaped_entry_title
+endfunction
 
-  let l:content_type = 'html' " TODO or text?
-  if l:entry['content.type'] ==# 'text/x-markdown'
-    let l:content_type = 'markdown'
-  elseif l:entry['content.type'] ==# 'text/x-hatena-syntax'
-    let l:content_type = 'hatena'
+function! s:ask(comment)
+  if (exists("g:hateblo_vim['always_yes']") && g:hateblo_vim['always_yes'] == 1)
+    return 1
+  else
+    let l:will_update = input(a:comment . ' (y/n) [n]: ')
+    if l:will_update == 'y'
+      return 1
+    else
+      return 0
+    endif
   endif
+endfunction
 
-  let l:categories = []
-  for l:category in l:entry['category']
-    call add(l:categories, l:category['term'])
-  endfor
-  let l:hateblo_category_str = join(l:categories, ', ')
+function! s:check_buffer()
+  if !exists('b:hateblo_entry_title') || !exists('b:hateblo_entry_url')
+    throw 'This entry does not exist on remote!'
+  endif
+endfunction
 
-  let l:lines = split(l:entry['content'], '\n')
+function! s:get_title(silent)
+  let l:title_line = getline(1)
+  if l:title_line[0:len(s:title_prefix)-1] ==# s:title_prefix
+    return s:strip_whitespace(l:title_line[len(s:title_prefix):])
+  elseif exists('b:hateblo_entry_title') && b:hateblo_entry_title != ''
+    return b:hateblo_entry_title
+  elseif a:silent
+    return '■'
+  else
+    let l:title = s:strip_whitespace(input("Enter the title: "))
+    if len(l:title) > 0
+      return l:title
+    else
+      return '■'
+    endif
+  endif
+endfunction
+
+function! s:get_category(silent)
+  let l:category_line = getline(2)
+  if l:category_line[0:len(s:category_prefix)-1] ==# s:category_prefix
+    let l:category_str = s:strip_whitespace(l:category_line[len(s:category_prefix):])
+  elseif !exists("b:hateblo_category_str") && b:hateblo_category_str != ''
+    let l:category_str = b:hateblo_category_str
+  elseif a:silent
+    let l:category_str = ""
+  else
+    let l:category_str = s:strip_whitespace(input("Enter the categories: "))
+  endif
+  let b:hateblo_category_str = l:category_str
+  return map(split(l:category_str, ','), 's:strip_whitespace(v:val)')
+endfunction
+
+function! s:check_draft()
+  if b:hateblo_is_draft ==# 'yes'
+    let l:publish_draft = input('Is this draft exhibited? (y/n) [n]: ')
+    if (l:publish_draft == 'y')
+      let b:hateblo_is_draft = 'no'
+    endif
+  endif
+endfunction
+
+function! s:strip_header(lines)
+  if len(a:lines) < 2
+    return a:lines
+  endif
+  if a:lines[1][0:len(s:category_prefix)-1] ==# s:category_prefix
+    call remove(a:lines, 1)
+  endif
+  if a:lines[0][0:len(s:title_prefix)-1] ==# s:title_prefix
+    call remove(a:lines, 0)
+  endif
+  return a:lines
+endfunction
+
+function! s:format_lines(lines)
+  let l:lines = a:lines
   if exists("g:hateblo_vim['WYSIWYG_mode']") && g:hateblo_vim['WYSIWYG_mode'] == 1
     let l:lines = map(l:lines, 'substitute(v:val, "<br />", "\n", "g")')
   endif
   let l:lines = map(l:lines, 'substitute(v:val, "$", "", "")') " Remove 'CR' newline characters
-  call append(0, l:lines)
+  return l:lines
+endfunction
 
-  let l:editor_buf_num = bufnr(l:escaped_entry_title)
-  call setbufvar(l:editor_buf_num, 'hateblo_entry_title', l:entry['title'])
-  call setbufvar(l:editor_buf_num, 'hateblo_entry_url', a:entry_url)
-  call setbufvar(l:editor_buf_num, 'hateblo_category_str', l:hateblo_category_str)
-  call setbufvar(l:editor_buf_num, 'hateblo_is_draft', l:entry['app:control']['app:draft'])
-  execute 'setlocal filetype=' . l:content_type
+function! s:get_lines(entry)
+  let l:lines = split(a:entry['content'], '\n')
+  return s:format_lines(l:lines)
+endfunction
+
+function! s:get_content_type(entry)
+  if a:entry['content.type'] ==# 'text/x-markdown'
+    return 'markdown'
+  elseif a:entry['content.type'] ==# 'text/x-hatena-syntax'
+    return 'hatena'
+  else
+    return 'html' " TODO or text?
+  endif
+endfunction
+
+function! s:get_entry_category(entry)
+  let l:categories = []
+  for l:category in a:entry['category']
+    call add(l:categories, l:category['term'])
+  endfor
+  return l:categories
+endfunction
+
+function! s:save_entry_meta_to_buffer(entry_url, entry)
+  let b:hateblo_entry_url = a:entry_url
+  let b:hateblo_category_str = join(s:get_entry_category(a:entry), ', ')
+  let b:hateblo_entry_title = a:entry['title']
+  let b:hateblo_is_draft = a:entry['app:control']['app:draft']
+  execute 'setlocal filetype=' . s:get_content_type(a:entry)
+endfunction
+
+function! s:save_feed_meta_to_buffer(feed)
+  let b:hateblo_entries = a:feed['entry']
+  let b:hateblo_next_page = hateblo#getNextPageLink(a:feed)
 endfunction
 
 let &cpo = s:save_cpo
 unlet s:save_cpo
+
+" vim:set tw=2 ts=2 sw=2:
