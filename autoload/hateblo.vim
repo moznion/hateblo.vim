@@ -116,14 +116,6 @@ function! hateblo#getNextPageLink(feed)
   endfor
 endfunction
 
-function! hateblo#getFirstPageLink(feed)
-  for l:link in a:feed['link']
-    if l:link['rel'] == 'first'
-      return l:link['href']
-    endif
-  endfor
-endfunction
-
 let s:entry_api = g:hateblo_vim['api_endpoint'] . '/entry'
 let s:title_prefix = 'TITLE:'
 let s:category_prefix = 'CATEGORY:'

@@ -27,7 +27,7 @@ function! metarw#hateblo#read(fakepath)
             \ })
     endif
 
-    let l:first_page = hateblo#getFirstPageLink(l:feed)
+    let l:first_page = s:getFirstPageLink(l:feed)
     if l:first_page != ""
       call add(l:entries, {
             \ 'label': '<< First Page',
@@ -46,6 +46,14 @@ endfunction
 
 function! metarw#hateblo#write(fakepath, l1, l2, append_p)
   " call hateblo#updateEntry(1)
+endfunction
+
+function! s:getFirstPageLink(feed)
+  for l:link in a:feed['link']
+    if l:link['rel'] == 'first'
+      return l:link['href']
+    endif
+  endfor
 endfunction
 
 let &cpo = s:save_cpo
