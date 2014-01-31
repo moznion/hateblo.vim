@@ -2,11 +2,11 @@ let s:save_cpo = &cpo
 set cpo&vim
 
 function! hateblo#createEntry(is_draft)
-  let b:contents_beginning_line = 1 " XXX suxxs!
+  let b:hateblo_contents_beginning_line = 1 " XXX suxxs!
 
   let l:title    = s:get_title()
   let l:category = s:get_category()
-  let l:lines    = s:format_lines(getline(b:contents_beginning_line, '$'))
+  let l:lines    = s:format_lines(getline(b:hateblo_contents_beginning_line, '$'))
   let l:content  = join(l:lines, "\n")
 
   if s:ask('Post?')
@@ -20,14 +20,15 @@ function! hateblo#createEntry(is_draft)
 endfunction
 
 function! hateblo#updateEntry()
-  let b:contents_beginning_line = 1 " XXX suxxs!
+  let b:hateblo_contents_beginning_line = 1 " XXX suxxs!
 
   call s:does_remote_article_exist()
 
   let l:title    = s:get_title()
   let l:category = s:get_category()
-  let l:lines    = s:format_lines(s:strip_header(getline(b:contents_beginning_line, '$')))
+  let l:lines    = s:format_lines(s:strip_header(getline(b:hateblo_contents_beginning_line, '$')))
   let l:content  = join(l:lines, "\n")
+
   call s:confirm_publish() " If it returns 'no', article will be updated as still draft
   if s:ask('Update?')
     call s:update(l:title, l:content, l:category)
@@ -214,7 +215,7 @@ function! s:get_title()
 
   if l:title_line[0:len(s:title_prefix)-1] ==# s:title_prefix
     " `TITLE: foobar` is on the top of line
-    let b:contents_beginning_line += 1
+    let b:hateblo_contents_beginning_line += 1
     return s:strip_whitespace(l:title_line[len(s:title_prefix):])
   elseif exists('b:hateblo_entry_title') && b:hateblo_entry_title != ''
     return b:hateblo_entry_title
@@ -229,11 +230,11 @@ function! s:get_title()
 endfunction
 
 function! s:get_category()
-  let l:category_line = getline(b:contents_beginning_line)
+  let l:category_line = getline(b:hateblo_contents_beginning_line)
 
   if l:category_line[0:len(s:category_prefix)-1] ==# s:category_prefix
     " `CATEGORY: Perl, Ruby` is on the top of line
-    let b:contents_beginning_line += 1
+    let b:hateblo_contents_beginning_line += 1
     let l:category_str = s:strip_whitespace(l:category_line[len(s:category_prefix):])
   elseif exists("b:hateblo_category_str") && b:hateblo_category_str != ''
     let l:category_str = b:hateblo_category_str
