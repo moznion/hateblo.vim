@@ -2,7 +2,7 @@ let s:save_cpo = &cpo
 set cpo&vim
 
 function! hateblo#createEntry(is_draft)
-  let l:title = s:get_title(1)
+  let l:title = s:get_title()
   let l:category = s:get_category(1)
   let l:lines = s:format_lines(getline('1', '$'))
   let l:content = join(l:lines, "\n")
@@ -18,7 +18,7 @@ endfunction
 
 function! hateblo#updateEntry(silent)
   call s:check_buffer()
-  let l:title = s:get_title(a:silent)
+  let l:title = s:get_title()
   let l:category = s:get_category(a:silent)
   let l:lines = s:format_lines(s:strip_header(getline('1', '$')))
   let l:content = join(l:lines, "\n")
@@ -204,14 +204,13 @@ function! s:check_buffer()
   endif
 endfunction
 
-function! s:get_title(silent)
+function! s:get_title()
   let l:title_line = getline(1)
+
   if l:title_line[0:len(s:title_prefix)-1] ==# s:title_prefix
     return s:strip_whitespace(l:title_line[len(s:title_prefix):])
   elseif exists('b:hateblo_entry_title') && b:hateblo_entry_title != ''
     return b:hateblo_entry_title
-  elseif a:silent
-    return '■'
   else
     let l:title = s:strip_whitespace(input("Enter the title: "))
     if len(l:title) > 0
