@@ -22,7 +22,7 @@ endfunction
 function! hateblo#updateEntry()
   let b:contents_beginning_line = 1 " XXX suxxs!
 
-  call s:check_buffer()
+  call s:does_remote_article_exist()
 
   let l:title    = s:get_title()
   let l:category = s:get_category()
@@ -40,7 +40,7 @@ function! hateblo#updateEntry()
 endfunction
 
 function! hateblo#deleteEntry()
-  call s:check_buffer()
+  call s:does_remote_article_exist()
   if s:ask('Delete?')
     call webapi#atom#deleteEntry(
           \ b:hateblo_entry_url,
@@ -202,7 +202,8 @@ function! s:ask(comment)
   endif
 endfunction
 
-function! s:check_buffer()
+function! s:does_remote_article_exist()
+  " XXX Uggggggg... I think this way is pretty damn...
   if !exists('b:hateblo_entry_title') || !exists('b:hateblo_entry_url')
     throw 'This entry does not exist on remote!'
   endif
