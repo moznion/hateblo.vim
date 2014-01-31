@@ -124,7 +124,6 @@ function! hateblo#getFirstPageLink(feed)
   endfor
 endfunction
 
-
 let s:entry_api = g:hateblo_vim['api_endpoint'] . '/entry'
 let s:title_prefix = 'TITLE:'
 let s:category_prefix = 'CATEGORY:'
@@ -216,17 +215,18 @@ function! s:get_title()
   if l:title_line[0:len(s:title_prefix)-1] ==# s:title_prefix
     " `TITLE: foobar` is on the top of line
     let b:hateblo_contents_beginning_line += 1
-    return s:strip_whitespace(l:title_line[len(s:title_prefix):])
+    let l:title = s:strip_whitespace(l:title_line[len(s:title_prefix):])
   elseif exists('b:hateblo_entry_title') && b:hateblo_entry_title != ''
-    return b:hateblo_entry_title
+    let l:title = b:hateblo_entry_title
   else
     let l:title = s:strip_whitespace(input("Enter the title: "))
-    if len(l:title) > 0
-      return l:title
-    else
-      return '■'
+    if len(l:title) <= 0
+      let l:title = '■'
     endif
   endif
+
+  let b:hateblo_entry_title = l:title
+  return l:title
 endfunction
 
 function! s:get_category()
