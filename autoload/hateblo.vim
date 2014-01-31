@@ -226,7 +226,7 @@ function! s:get_category(silent)
   let l:category_line = getline(2)
   if l:category_line[0:len(s:category_prefix)-1] ==# s:category_prefix
     let l:category_str = s:strip_whitespace(l:category_line[len(s:category_prefix):])
-  elseif !exists("b:hateblo_category_str") && b:hateblo_category_str != ''
+  elseif exists("b:hateblo_category_str") && b:hateblo_category_str != ''
     let l:category_str = b:hateblo_category_str
   elseif a:silent
     let l:category_str = ""
