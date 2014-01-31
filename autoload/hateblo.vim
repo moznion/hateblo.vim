@@ -26,7 +26,7 @@ function! hateblo#updateEntry()
 
   let l:title    = s:get_title()
   let l:category = s:get_category()
-  let l:lines    = s:format_lines(s:strip_header(getline(b:hateblo_contents_beginning_line, '$')))
+  let l:lines    = s:format_lines(getline(b:hateblo_contents_beginning_line, '$'))
   let l:content  = join(l:lines, "\n")
 
   call s:confirm_publish() " If it returns 'no', article will be updated as still draft
@@ -253,19 +253,6 @@ function! s:confirm_publish()
       let b:hateblo_is_draft = 'no'
     endif
   endif
-endfunction
-
-function! s:strip_header(lines)
-  if len(a:lines) < 2
-    return a:lines
-  endif
-  if a:lines[1][0:len(s:category_prefix)-1] ==# s:category_prefix
-    call remove(a:lines, 1)
-  endif
-  if a:lines[0][0:len(s:title_prefix)-1] ==# s:title_prefix
-    call remove(a:lines, 0)
-  endif
-  return a:lines
 endfunction
 
 function! s:format_lines(lines)
