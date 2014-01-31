@@ -28,7 +28,7 @@ function! hateblo#updateEntry()
   let l:category = s:get_category()
   let l:lines    = s:format_lines(s:strip_header(getline(b:contents_beginning_line, '$')))
   let l:content  = join(l:lines, "\n")
-  call s:check_draft()
+  call s:confirm_publish() " If it returns 'no', article will be updated as still draft
   if s:ask('Update?')
     call s:update(l:title, l:content, l:category)
     redraw
@@ -244,9 +244,9 @@ function! s:get_category()
   return map(split(l:category_str, ','), 's:strip_whitespace(v:val)')
 endfunction
 
-function! s:check_draft()
+function! s:confirm_publish()
   if b:hateblo_is_draft ==# 'yes'
-    let l:publish_draft = input('Is this draft exhibited? (y/n) [n]: ')
+    let l:publish_draft = input('Publish this draft? (y/n) [n]: ')
     if (l:publish_draft == 'y')
       let b:hateblo_is_draft = 'no'
     endif
