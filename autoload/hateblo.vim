@@ -2,10 +2,13 @@ let s:save_cpo = &cpo
 set cpo&vim
 
 function! hateblo#createEntry(is_draft)
-  let l:title = s:get_title()
+  let b:contents_beginning_line = 1 " XXX suxxs!
+
+  let l:title    = s:get_title()
   let l:category = s:get_category()
-  let l:lines = s:format_lines(getline('1', '$'))
-  let l:content = join(l:lines, "\n")
+  let l:lines    = s:format_lines(getline(b:contents_beginning_line, '$'))
+  let l:content  = join(l:lines, "\n")
+
   if s:ask('Post?')
     call s:create(l:title, l:content, l:category, a:is_draft)
     redraw
@@ -16,7 +19,7 @@ function! hateblo#createEntry(is_draft)
   endif
 endfunction
 
-function! hateblo#updateEntry(silent)
+function! hateblo#updateEntry()
   call s:check_buffer()
   let l:title = s:get_title()
   let l:category = s:get_category()
@@ -206,6 +209,8 @@ function! s:get_title()
   let l:title_line = getline(1)
 
   if l:title_line[0:len(s:title_prefix)-1] ==# s:title_prefix
+    " `TITLE: foobar` is on the top of line
+    let b:contents_beginning_line += 1
     return s:strip_whitespace(l:title_line[len(s:title_prefix):])
   elseif exists('b:hateblo_entry_title') && b:hateblo_entry_title != ''
     return b:hateblo_entry_title
@@ -220,9 +225,11 @@ function! s:get_title()
 endfunction
 
 function! s:get_category()
-  let l:category_line = getline(2)
+  let l:category_line = getline(b:contents_beginning_line)
 
   if l:category_line[0:len(s:category_prefix)-1] ==# s:category_prefix
+    " `CATEGORY: Perl, Ruby` is on the top of line
+    let b:contents_beginning_line += 1
     let l:category_str = s:strip_whitespace(l:category_line[len(s:category_prefix):])
   elseif exists("b:hateblo_category_str") && b:hateblo_category_str != ''
     let l:category_str = b:hateblo_category_str
