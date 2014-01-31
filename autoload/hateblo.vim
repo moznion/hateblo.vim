@@ -3,7 +3,7 @@ set cpo&vim
 
 function! hateblo#createEntry(is_draft)
   let l:title = s:get_title()
-  let l:category = s:get_category(1)
+  let l:category = s:get_category()
   let l:lines = s:format_lines(getline('1', '$'))
   let l:content = join(l:lines, "\n")
   if s:ask('Post?')
@@ -19,13 +19,11 @@ endfunction
 function! hateblo#updateEntry(silent)
   call s:check_buffer()
   let l:title = s:get_title()
-  let l:category = s:get_category(a:silent)
+  let l:category = s:get_category()
   let l:lines = s:format_lines(s:strip_header(getline('1', '$')))
   let l:content = join(l:lines, "\n")
-  if !a:silent
-    call s:check_draft()
-  endif
-  if a:silent || s:ask('Update?')
+  call s:check_draft()
+  if s:ask('Update?')
     call s:update(l:title, l:content, l:category)
     redraw
     echo "Done!"
@@ -221,17 +219,17 @@ function! s:get_title()
   endif
 endfunction
 
-function! s:get_category(silent)
+function! s:get_category()
   let l:category_line = getline(2)
+
   if l:category_line[0:len(s:category_prefix)-1] ==# s:category_prefix
     let l:category_str = s:strip_whitespace(l:category_line[len(s:category_prefix):])
   elseif exists("b:hateblo_category_str") && b:hateblo_category_str != ''
     let l:category_str = b:hateblo_category_str
-  elseif a:silent
-    let l:category_str = ""
   else
     let l:category_str = s:strip_whitespace(input("Enter the categories: "))
   endif
+
   let b:hateblo_category_str = l:category_str
   return map(split(l:category_str, ','), 's:strip_whitespace(v:val)')
 endfunction
