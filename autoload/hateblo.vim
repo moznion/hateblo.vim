@@ -20,11 +20,14 @@ function! hateblo#createEntry(is_draft)
 endfunction
 
 function! hateblo#updateEntry()
+  let b:contents_beginning_line = 1 " XXX suxxs!
+
   call s:check_buffer()
-  let l:title = s:get_title()
+
+  let l:title    = s:get_title()
   let l:category = s:get_category()
-  let l:lines = s:format_lines(s:strip_header(getline('1', '$')))
-  let l:content = join(l:lines, "\n")
+  let l:lines    = s:format_lines(s:strip_header(getline(b:contents_beginning_line, '$')))
+  let l:content  = join(l:lines, "\n")
   call s:check_draft()
   if s:ask('Update?')
     call s:update(l:title, l:content, l:category)
