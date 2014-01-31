@@ -11,7 +11,7 @@ function! metarw#hateblo#read(fakepath)
     let l:feed = hateblo#getFeed(s:entry_api . l:entry_id)
     let l:entries = map(l:feed['entry'], '{
           \ "label": v:val["title"],
-          \ "fakepath": s:metarw_head . hateblo#getEntryID(v:val["link"][0]["href"])
+          \ "fakepath": s:metarw_head . s:getEntryID(v:val["link"][0]["href"])
           \ }')
 
     call insert(l:entries, {
@@ -37,7 +37,7 @@ function! metarw#hateblo#read(fakepath)
     return ['browse', l:entries]
   endif
   if l:entry_id ==# s:new_entry_id
-    let l:entry_id = hateblo#newEntry()
+    let l:entry_id = s:newEntry()
     execute ':file ' . s:metarw_head . l:entry_id
   endif
   call hateblo#readEntry(s:entry_api . '/' . l:entry_id)
@@ -54,6 +54,20 @@ function! s:getFirstPageLink(feed)
       return l:link['href']
     endif
   endfor
+endfunction
+
+function! s:newEntry()
+  let l:entry_url = util#hateblo#createEntry('', '', [], 'yes')
+  return s:getEntryID(l:entry_url)
+endfunction
+
+function! s:getEntryID(entry_url)
+  let l:sub = substitute(a:entry_url, g:hateblo_entry_api_endpoint, '', '')
+  if l:sub[0] == '/'
+    return l:sub[1:]
+  else
+    echoerr 'This is not entry url'
+  endif
 endfunction
 
 let &cpo = s:save_cpo
