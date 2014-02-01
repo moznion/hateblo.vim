@@ -60,10 +60,10 @@ y
     tmp_file = Tempfile::new('tmp');
     delete_vim_tmp_file = Tempfile::new('delete.vim')
     delete_vim_tmp_file.write <<-"..."
+:let g:hateblo_vim['always_yes'] = 1
 :let b:hateblo_entry_title = '#{article_title}'
 :let b:hateblo_entry_url = '#{article_uri}'
 :HatebloDelete
-y
 :quit!
     ...
     delete_vim_tmp_file.rewind
