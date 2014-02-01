@@ -76,4 +76,145 @@ y
     tmp_file.close!
     delete_vim_tmp_file.close!
   end
+
+  it "TITLEだけ本文に指定して投稿する" do
+    article_content    = 'foo bar'
+    article_categories = ['vi', 'vim']
+
+    article_tmp_file = Tempfile::new(article_title)
+    article_tmp_file.write <<-"..."
+TITLE: #{article_title}
+#{article_content}
+    ...
+    article_tmp_file.rewind
+
+    create_vim_tmp_file = Tempfile::new('create.vim')
+    create_vim_tmp_file.write <<-"..."
+:let g:hateblo_vim = #{g_hateblo_vim_obj}
+:HatebloCreate
+#{article_categories.join(',')}
+y
+:quit!
+    ...
+    create_vim_tmp_file.rewind
+
+    `vim -s #{create_vim_tmp_file.path} #{article_tmp_file.path} > /dev/null 2>&1`
+
+    entry = client.get_feed(collection_uri).entry
+    categories = article_categories
+    entry.categories.each do |category|
+      term = category.term
+      expect(categories.delete(term)).to eq(term)
+    end
+    expect(entry.title).to eq(article_title)
+    expect(categories).to eq([])
+    expect(entry.content.body).to eq(article_content)
+
+    article_uri = entry.link.href
+
+    delete_article(article_title, article_uri)
+
+    article_tmp_file.close!
+    create_vim_tmp_file.close!
+  end
+
+  it "CATEGORYだけ本文に指定する" do
+    article_content    = 'foo bar'
+    article_categories = ['vi', 'vim']
+
+    article_tmp_file = Tempfile::new(article_title)
+    article_tmp_file.write <<-"..."
+CATEGORY: #{article_categories.join(',')}
+#{article_content}
+    ...
+    article_tmp_file.rewind
+
+    create_vim_tmp_file = Tempfile::new('create.vim')
+    create_vim_tmp_file.write <<-"..."
+:let g:hateblo_vim = #{g_hateblo_vim_obj}
+:HatebloCreate
+#{article_title}
+y
+:quit!
+    ...
+    create_vim_tmp_file.rewind
+
+    `vim -s #{create_vim_tmp_file.path} #{article_tmp_file.path} > /dev/null 2>&1`
+
+    entry = client.get_feed(collection_uri).entry
+    categories = article_categories
+    entry.categories.each do |category|
+      term = category.term
+      expect(categories.delete(term)).to eq(term)
+    end
+    expect(entry.title).to eq(article_title)
+    expect(categories).to eq([])
+    expect(entry.content.body).to eq(article_content)
+
+    article_uri = entry.link.href
+
+    delete_article(article_title, article_uri)
+
+    article_tmp_file.close!
+    create_vim_tmp_file.close!
+  end
+
+  it "TITLE/CATEGORYどちらもインタラクティブに指定する" do
+    article_content    = 'foo bar'
+    article_categories = ['vi', 'vim']
+
+    article_tmp_file = Tempfile::new(article_title)
+    article_tmp_file.write <<-"..."
+#{article_content}
+    ...
+    article_tmp_file.rewind
+
+    create_vim_tmp_file = Tempfile::new('create.vim')
+    create_vim_tmp_file.write <<-"..."
+:let g:hateblo_vim = #{g_hateblo_vim_obj}
+:HatebloCreate
+#{article_title}
+#{article_categories.join(',')}
+y
+:quit!
+    ...
+    create_vim_tmp_file.rewind
+
+    `vim -s #{create_vim_tmp_file.path} #{article_tmp_file.path} > /dev/null 2>&1`
+
+    entry = client.get_feed(collection_uri).entry
+    categories = article_categories
+    entry.categories.each do |category|
+      term = category.term
+      expect(categories.delete(term)).to eq(term)
+    end
+    expect(entry.title).to eq(article_title)
+    expect(categories).to eq([])
+    expect(entry.content.body).to eq(article_content)
+
+    article_uri = entry.link.href
+
+    delete_article(article_title, article_uri)
+
+    article_tmp_file.close!
+    create_vim_tmp_file.close!
+  end
+end
+
+def delete_article (article_title, article_uri)
+  tmp_file = Tempfile::new('tmp');
+  delete_vim_tmp_file = Tempfile::new('delete.vim')
+  delete_vim_tmp_file.write <<-"..."
+:let g:hateblo_vim['always_yes'] = 1
+:let b:hateblo_entry_title = '#{article_title}'
+:let b:hateblo_entry_url = '#{article_uri}'
+:HatebloDelete
+:quit!
+  ...
+  delete_vim_tmp_file.rewind
+
+  `vim -s #{delete_vim_tmp_file.path} #{tmp_file.path} > /dev/null 2>&1`
+
+  tmp_file.close!
+  delete_vim_tmp_file.close!
 end
