@@ -8,7 +8,7 @@ let s:new_entry_id = 'NewEntry'
 function! metarw#hateblo#read(fakepath)
   let l:entry_id = substitute(a:fakepath, s:metarw_head, '', '')
   if l:entry_id == "" || l:entry_id[0] == "?"
-    let l:feed = hateblo#getFeed(s:entry_api . l:entry_id)
+    let l:feed = hateblo#webapi#getFeed(s:entry_api . l:entry_id)
     let l:entries = map(l:feed['entry'], '{
           \ "label": v:val["title"],
           \ "fakepath": s:metarw_head . s:getEntryID(v:val["link"][0]["href"])
@@ -57,7 +57,7 @@ function! s:getFirstPageLink(feed)
 endfunction
 
 function! s:newEntry()
-  let l:entry_url = util#hateblo#createEntry('', '', [], 'yes')
+  let l:entry_url = hateblo#webapi#createEntry('', '', [],'yes')
   return s:getEntryID(l:entry_url)
 endfunction
 

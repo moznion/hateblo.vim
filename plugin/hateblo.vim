@@ -34,6 +34,7 @@ set cpo&vim
 " - g:hateblo_vim['edit_command']   Command to open the entry
 
 let g:hateblo_vim['edit_command'] = get(g:hateblo_vim, 'edit_command', 'edit')
+let g:hateblo_entry_api_endpoint = g:hateblo_vim['api_endpoint'] . '/entry'
 
 command! -nargs=0 HatebloCreate      call hateblo#createEntry('no')
 command! -nargs=0 HatebloCreateDraft call hateblo#createEntry('yes')

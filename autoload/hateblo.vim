@@ -1,8 +1,6 @@
 let s:save_cpo = &cpo
 set cpo&vim
 
-let g:hateblo_entry_api_endpoint = g:hateblo_vim['api_endpoint'] . '/entry'
-
 function! hateblo#createEntry(is_draft)
   let b:hateblo_contents_beginning_line = 1 " XXX suxxs!
 
