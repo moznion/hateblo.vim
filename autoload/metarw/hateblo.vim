@@ -41,11 +41,29 @@ function! metarw#hateblo#read(fakepath)
     execute ':file ' . s:metarw_head . l:entry_id
   endif
   call hateblo#readEntry(s:entry_api . '/' . l:entry_id)
+  let b:hateblo_metarw_save_flag = 0
   return ['done', '']
 endfunction
 
 function! metarw#hateblo#write(fakepath, l1, l2, append_p)
-  " call hateblo#updateEntry(1)
+  let b:hateblo_metarw_save_flag = 1
+endfunction
+
+function! metarw#hateblo#autosave()
+  let buf_num = str2nr(expand("<abuf>"))
+  let save_flag = getbufvar(buf_num, 'hateblo_metarw_save_flag')
+  if save_flag == 1
+    let lines = getbufline(buf_num, 1, '$')
+    let detail = hateblo#lines#parse(lines)
+    echo 'Sending article...'
+    call hateblo#webapi#updateEntry(
+          \ getbufvar(buf_num, 'hateblo_entry_url'),
+          \ detail['title'],
+          \ detail['contents'],
+          \ detail['category'],
+          \ getbufvar(buf_num, 'hateblo_is_draft'))
+    echo 'Done'
+  endif
 endfunction
 
 function! s:getFirstPageLink(feed)
