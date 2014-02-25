@@ -38,7 +38,7 @@ let g:hateblo_entry_api_endpoint = g:hateblo_vim['api_endpoint'] . '/entry'
 
 command! -nargs=0 HatebloCreate      call hateblo#createEntry('no')
 command! -nargs=0 HatebloCreateDraft call hateblo#createEntry('yes')
-command! -nargs=0 HatebloList        call hateblo#listEntry()
+command! -nargs=0 HatebloList        Unite hateblo-list
 command! -nargs=0 HatebloUpdate      call hateblo#updateEntry()
 command! -nargs=0 HatebloDelete      call hateblo#deleteEntry()
 
