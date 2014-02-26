@@ -18,7 +18,7 @@ describe '記事の作成を行う' do
   let (:article_content)    {'foo bar'}
   let (:article_categories) {['vi', 'vim']}
 
-  it '新しい記事を作成する' do
+  it 'TITLEとCATEGORYを本文に指定して投稿する' do
     article_str = <<-"--"
 TITLE: #{article_title}
 CATEGORY: #{article_categories.join(',')}
@@ -30,7 +30,7 @@ CATEGORY: #{article_categories.join(',')}
 y
 :quit!
     --
-    test_create_entry(article_str, create_vim_str)
+    test_create_entry(article_title, article_categories, article_str, create_vim_str)
   end
 
   it "TITLEだけ本文に指定して投稿する" do
@@ -45,10 +45,10 @@ TITLE: #{article_title}
 y
 :quit!
     --
-    test_create_entry(article_str, create_vim_str)
+    test_create_entry(article_title, article_categories, article_str, create_vim_str)
   end
 
-  it "CATEGORYだけ本文に指定する" do
+  it "CATEGORYだけ本文に指定して投稿する" do
     article_str = <<-"--"
 CATEGORY: #{article_categories.join(',')}
 #{article_content}
@@ -60,10 +60,10 @@ CATEGORY: #{article_categories.join(',')}
 y
 :quit!
     --
-    test_create_entry(article_str, create_vim_str)
+    test_create_entry(article_title, article_categories, article_str, create_vim_str)
   end
 
-  it "TITLE/CATEGORYどちらもインタラクティブに指定する" do
+  it "TITLE/CATEGORYどちらもインタラクティブに指定して投稿する" do
     article_str    = article_content
     create_vim_str = <<-"--"
 :let g:hateblo_vim = #{g_hateblo_vim_obj}
@@ -73,11 +73,24 @@ y
 y
 :quit!
     --
-    test_create_entry(article_str, create_vim_str)
+    test_create_entry(article_title, article_categories, article_str, create_vim_str)
+  end
+
+  it "TITLE/CATEGORYどちらも空で投稿する" do
+    article_str    = article_content
+    create_vim_str = <<-"--"
+:let g:hateblo_vim = #{g_hateblo_vim_obj}
+:HatebloCreate
+
+
+y
+:quit!
+    --
+    test_create_entry('■', [], article_str, create_vim_str)
   end
 end
 
-def test_create_entry(article_str, create_vim_str)
+def test_create_entry(article_title, article_categories, article_str, create_vim_str)
   article_tmp_file = Tempfile::new(article_title)
   article_tmp_file.write article_str
   article_tmp_file.rewind
@@ -118,8 +131,9 @@ def delete_article(article_uri)
 
   `vim -s #{delete_vim_tmp_file.path} #{tmp_file.path} > /dev/null 2>&1`
 
-  entry = client.get_feed(collection_uri).entry
-  expect(entry.title).not_to eq(article_title)
+  # ここでテストするの責務的におかしそう
+  # entry = client.get_feed(collection_uri).entry
+  # expect(entry.title).not_to eq(article_title)
 
   tmp_file.close!
   delete_vim_tmp_file.close!
