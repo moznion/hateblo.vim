@@ -20,14 +20,14 @@ function! s:unite_hateblo_list_source.action_table.on_choose.func(candidate)
   if a:candidate.action__action == 'edit_entry'
     call hateblo#detailEntry(a:candidate.action__url)
   elseif a:candidate.action__action == 'next_page'
-    call s:getFeed(a:candidate.action__url)
+    call s:getEntriesList(a:candidate.action__url)
     Unite hateblo-list
   endif
 endfunction
 
 function! s:unite_hateblo_list_source.gather_candidates(args, context)
   if !exists('b:hateblo_entries')
-    call s:getFeed()
+    call s:getEntriesList()
   endif
   let l:entries = b:hateblo_entries
 
@@ -67,7 +67,7 @@ function! unite#sources#hateblo_list#define()
   return s:unite_hateblo_list_source
 endfunction
 
-function! s:getFeed(...)
+function! s:getEntriesList(...)
   if exists('a:000[0]')
     let l:feed = hateblo#webapi#getFeed(a:000[0])
   else
