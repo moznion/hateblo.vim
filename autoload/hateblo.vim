@@ -72,16 +72,6 @@ function! hateblo#detailEntry(entry_url)
   call s:save_entry_meta_to_buffer(a:entry_url, l:entry)
 endfunction
 
-function! hateblo#listEntry(...)
-  if exists('a:000[0]')
-    let l:feed = hateblo#webapi#getFeed(a:000[0])
-  else
-    let l:feed = hateblo#webapi#getFeed(g:hateblo_entry_api_endpoint)
-  endif
-  call s:save_feed_meta_to_buffer(l:feed)
-  Unite hateblo-list
-endfunction
-
 function! hateblo#getNextPageLink(feed)
   for l:link in a:feed['link']
     if l:link['rel'] == 'next'
@@ -197,11 +187,6 @@ function! s:save_entry_meta_to_buffer(entry_url, entry)
   let b:hateblo_entry_title = a:entry['title']
   let b:hateblo_is_draft = a:entry['app:control']['app:draft']
   execute 'setlocal filetype=' . s:get_content_type(a:entry)
-endfunction
-
-function! s:save_feed_meta_to_buffer(feed)
-  let b:hateblo_entries = a:feed['entry']
-  let b:hateblo_next_page = hateblo#getNextPageLink(a:feed)
 endfunction
 
 let &cpo = s:save_cpo
