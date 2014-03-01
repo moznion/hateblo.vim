@@ -36,11 +36,19 @@ set cpo&vim
 let g:hateblo_vim['edit_command'] = get(g:hateblo_vim, 'edit_command', 'edit')
 let g:hateblo_entry_api_endpoint = g:hateblo_vim['api_endpoint'] . '/entry'
 
+let g:hateblo_title_prefix = 'TITLE:'
+let g:hateblo_category_prefix = 'CATEGORY:'
+
 command! -nargs=0 HatebloCreate      call hateblo#createEntry('no')
 command! -nargs=0 HatebloCreateDraft call hateblo#createEntry('yes')
 command! -nargs=0 HatebloList        Unite hateblo-list
 command! -nargs=0 HatebloUpdate      call hateblo#updateEntry()
 command! -nargs=0 HatebloDelete      call hateblo#deleteEntry()
+
+augroup hateblo_metarw_autosave
+  autocmd!
+  autocmd BufUnload hateblo:[0-9]* call metarw#hateblo#autosave()
+augroup END
 
 let g:loaded_hateblo = 1
 
